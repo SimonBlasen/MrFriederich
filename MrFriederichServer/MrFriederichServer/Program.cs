@@ -10,7 +10,7 @@ namespace MrFriederichServer
     {
         static void Main(string[] args)
         {
-
+             
         }
     }
 }

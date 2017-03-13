@@ -1,2 +1,9 @@
 c:\users\simon\documents\visual studio 2015\Projects\MrFriederichServer\MrFriederichServer\bin\Debug\MrFriederichServer.exe.config
 D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Debug\MrFriederichServer.exe.config
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Debug\MrFriederichServer.exe
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Debug\MrFriederichServer.pdb
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Debug\LibraryUnityServer.dll
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\obj\Debug\MrFriederichServer.csprojResolveAssemblyReference.cache
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\obj\Debug\MrFriederichServer.exe
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\obj\Debug\MrFriederichServer.pdb
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Debug\LibraryUnityServer.pdb

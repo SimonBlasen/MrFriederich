@@ -1,8 +1,10 @@
 package com.sapp.glet.connection;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -29,16 +31,47 @@ public class Client implements MessageListener {
     }
 
     public void send(String message) {
-        out.printf(message);
+        String newMsg = ((char)((byte)255)) + ((char)((byte)255)) + message;
+        out.printf(newMsg);
     }
 
     public void send(byte[] bytes) {
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            oos.writeObject(bytes);
-            oos.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (true)
+        {
+            OutputStream os = null;
+            try {
+                byte[] newBytes = new byte[bytes.length + 2];
+                newBytes[0] = (byte)(bytes.length >> 8);
+                newBytes[1] = (byte)(bytes.length);
+                for (int i = 0; i < bytes.length; i++)
+                {
+                    newBytes[i + 2] = bytes[i];
+                }
+                os = socket.getOutputStream();
+                os.write(newBytes, 0, newBytes.length);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            try {
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                byte[] newBytes = new byte[bytes.length + 2];
+                newBytes[0] = (byte)(bytes.length >> 8);
+                newBytes[1] = (byte)(bytes.length);
+                for (int i = 0; i < bytes.length; i++)
+                {
+                    newBytes[i + 2] = bytes[i];
+                }
+                DataOutputStream dos = new DataOutputStream(oos);
+                dos.write(bytes, 0, bytes.length);
+
+                //oos.writeObject(newBytes);
+                //oos.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -48,7 +81,7 @@ public class Client implements MessageListener {
         out = new PrintWriter(socket.getOutputStream(), true);
 
         //Admit, that you are Java:
-        out.printf("IAmJava");
+        //out.printf("IAmJava");
         //Done admitting
 
         receiver = new Receiver(is);
@@ -72,9 +105,9 @@ public class Client implements MessageListener {
     }
 
     @Override
-    public void recieveMessage(String message) {
+    public void recieveMessage(String message, byte[] bytes) {
         for (int i = 0; i < listeners.size(); i++) {
-            listeners.get(i).recieveMessage(message);
+            listeners.get(i).recieveMessage(message, bytes);
         }
     }
 }

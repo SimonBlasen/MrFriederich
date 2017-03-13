@@ -30,4 +30,35 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
         android:id="@+id/switch1" />
+
+    <TextView
+        android:id="@+id/textViewMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/switch1"
+        android:layout_marginTop="13dp"
+        android:text="TextView" />
+
+    <EditText
+        android:id="@+id/editTextMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textViewMsg"
+        android:layout_marginTop="27dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Message" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editTextMsg"
+        android:layout_toEndOf="@+id/editTextMsg"
+        android:layout_toRightOf="@+id/editTextMsg"
+        android:text="Send" />
 </RelativeLayout>

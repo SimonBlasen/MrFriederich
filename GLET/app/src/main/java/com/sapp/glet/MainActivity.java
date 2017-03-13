@@ -1,6 +1,7 @@
 package com.sapp.glet;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
+import com.sapp.glet.service.PullService;
 
 import java.io.IOException;
 
@@ -59,6 +61,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        Intent intent = new Intent(this, PullService.class);
+        startService(intent);
+
 
 // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MessageListener {
 
     Client client;
+    Intent intentService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +64,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        Intent intent = new Intent(this, PullService.class);
-        startService(intent);
 
 
 // Here, thisActivity is the current activity
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+        //intentService = new Intent(this, PullService.class);
 
         Button buttonSend = (Button) findViewById(R.id.button);
         buttonSend.setOnClickListener(new View.OnClickListener() {
@@ -101,19 +101,22 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 EditText editText = (EditText) findViewById(R.id.editTextMsg);
                 //client.send(editText.getText().toString().getBytes());
-                client.send(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                //client.send(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+
+
+                //startService(intentService);
             }
         });
 
 
-        client = new Client("m.m-core.eu", 24400);
+        /*client = new Client("m.m-core.eu", 24400);
         client.addListener(this);
 
         try {
             client.Connect();
         } catch (IOException e) {
             Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG);
-        }
+        }*/
     }
 
     @Override

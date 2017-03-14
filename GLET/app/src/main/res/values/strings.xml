@@ -5,4 +5,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="remote_service_started">Service started</string>
+    <string name="remote_service_stopped">Serivice stopped</string>
+    <string name="local_service_label">Whatever</string>
 </resources>

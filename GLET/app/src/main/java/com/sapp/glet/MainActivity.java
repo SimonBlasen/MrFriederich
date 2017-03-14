@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        //intentService = new Intent(this, PullService.class);
+        intentService = new Intent(this, PullService.class);
 
         Button buttonSend = (Button) findViewById(R.id.button);
         buttonSend.setOnClickListener(new View.OnClickListener() {
@@ -104,11 +104,11 @@ public class MainActivity extends AppCompatActivity
                 //client.send(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
 
 
-                //startService(intentService);
             }
         });
 
 
+        getApplication().startService(new Intent(getApplication(), PullService.class));
         /*client = new Client("m.m-core.eu", 24400);
         client.addListener(this);
 

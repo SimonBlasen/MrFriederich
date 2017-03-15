@@ -2,6 +2,8 @@ package com.sapp.glet.database;
 
 import android.support.annotation.Nullable;
 
+import com.sapp.glet.database.games.Game;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
 public class Database {
 
     private static List<Player> m_players = new ArrayList<Player>();
+    private static List<Game> m_games = new ArrayList<Game>();
 
     /**
      * Returns the current amount of players available in total

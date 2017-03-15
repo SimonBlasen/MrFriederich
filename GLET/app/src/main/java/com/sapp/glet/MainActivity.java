@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
+import com.sapp.glet.service.MessengerService;
 import com.sapp.glet.service.PullService;
 
 import java.io.IOException;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity
                 //client.send(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
 
                 startService(intentService);
+
 
             }
         });

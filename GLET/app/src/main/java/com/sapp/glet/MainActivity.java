@@ -111,6 +111,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        Button button2 = (Button) findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopService(intentService);
+            }
+        });
+
 
         //getApplication().startService(new Intent(getApplication(), PullService.class));
         /*client = new Client("m.m-core.eu", 24400);

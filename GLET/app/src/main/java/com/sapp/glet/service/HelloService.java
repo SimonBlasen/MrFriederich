@@ -7,6 +7,8 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -69,9 +71,11 @@ public class HelloService extends Service {
                             public void recieveMessage(String message, byte[] bytes) {
                                 timeout = 0;
 
+                                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
                                 NotificationCompat.Builder mBuilder =
                                         new NotificationCompat.Builder(notifyContext)
-                                                .setSmallIcon(R.drawable.ic_menu_camera)
+                                                .setSmallIcon(R.drawable.ic_menu_camera).setContentInfo("Right Inf").setSubText("Sub Text").setVibrate(new long[] {0, 100, 200, 300, 300}).setSound(alarmSound)
                                                 .setContentTitle("My notification")
                                                 .setContentText("Length: " + bytes.length);
 

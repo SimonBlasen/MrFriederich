@@ -1,6 +1,7 @@
 package com.sapp.glet;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
+import com.sapp.glet.filesystem.Filer;
 import com.sapp.glet.service.HelloService;
 import com.sapp.glet.service.MessengerService;
 import com.sapp.glet.service.PullService;
@@ -36,11 +38,14 @@ public class MainActivity extends AppCompatActivity
 
     Client client;
     Intent intentService;
+    Context theContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        theContext = this;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -115,7 +120,9 @@ public class MainActivity extends AppCompatActivity
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopService(intentService);
+                //stopService(intentService);
+
+                Filer.getHash(theContext);
             }
         });
 

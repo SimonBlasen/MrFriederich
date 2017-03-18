@@ -22,23 +22,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.PullService"
+
+        <service
+            android:name=".service.PullService"
             android:exported="false" />
-        <service android:name=".service.MessengerService"
+        <service
+            android:name=".service.MessengerService"
             android:process=":remote" />
-
-        <service android:name=".service.HelloService"
+        <service
+            android:name=".service.HelloService"
             android:exported="false" />
 
-        <receiver android:name=".service.RestartServiceReceiver"
+        <receiver
+            android:name=".service.RestartServiceReceiver"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="IWillStartAuto" >
-                </action>
+                <action android:name="IWillStartAuto" />
             </intent-filter>
         </receiver>
 
+        <activity android:name=".AgoraProfile" />
+        <activity android:name=".StartGame"></activity>
     </application>
 
 </manifest>

@@ -70,4 +70,24 @@
         android:layout_toEndOf="@+id/editTextMsg"
         android:layout_toRightOf="@+id/editTextMsg"
         android:text="Button" />
+
+    <Button
+        android:id="@+id/button_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="72dp"
+        android:layout_toLeftOf="@+id/button2"
+        android:layout_toStartOf="@+id/button2"
+        android:text="My Profile" />
+
+    <Button
+        android:id="@+id/button_start_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_profile"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/button_profile"
+        android:layout_marginBottom="44dp"
+        android:text="Start Game" />
 </RelativeLayout>

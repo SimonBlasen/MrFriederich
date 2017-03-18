@@ -126,6 +126,26 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        Button b_game = (Button) findViewById(R.id.button_start_game);
+        b_game.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent launch_profile = new Intent(theContext, StartGame.class);
+                theContext.startActivity(launch_profile);
+            }
+        });
+
+        Button b_profile = (Button) findViewById(R.id.button_profile);
+        b_profile.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent launch_profile = new Intent(theContext, AgoraProfile.class);
+                theContext.startActivity(launch_profile);
+            }
+        });
+
+
+
 
         //getApplication().startService(new Intent(getApplication(), PullService.class));
         /*client = new Client("m.m-core.eu", 24400);
@@ -200,4 +220,6 @@ public class MainActivity extends AppCompatActivity
         TextView tv = (TextView) findViewById(R.id.textViewMsg);
         //tv.setText(message);
     }
+
+
 }

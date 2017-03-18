@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sapp.glet.StartGame">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
+
+        <TextView
+            android:id="@+id/text_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:textSize="28sp"
+            android:text="Wähle ein Spiel:"
+            android:layout_alignParentTop="true"
+            android:textColor="@android:color/black"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/button_game_paragon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/button_game_smite"
+            android:layout_marginTop="18dp"
+            android:background="@android:color/holo_red_dark"
+            android:text="Paragon" />
+
+        <Button
+            android:id="@+id/button_game_robocraft"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/button_game_cs"
+            android:layout_marginTop="17dp"
+            android:background="@android:color/holo_red_dark"
+            android:text="Robocraft" />
+
+        <Button
+            android:id="@+id/button_game_smite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="129dp"
+            android:background="@android:color/holo_orange_dark"
+            android:text="Smite" />
+
+        <Button
+            android:id="@+id/button_game_cube"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/button_game_paragon"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/holo_green_light"
+            android:text="Cube Racer" />
+
+        <Button
+            android:id="@+id/button_game_cs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/button_game_cube"
+            android:layout_marginTop="22dp"
+            android:background="@android:color/holo_blue_dark"
+            android:text="CS Go" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

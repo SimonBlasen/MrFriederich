@@ -127,8 +127,9 @@ namespace MrFriederichServer
         {
             if (File.Exists(file))
             {
-                MD5 md5 = MD5.Create();
-                return md5.ComputeHash(File.ReadAllBytes(file));
+                MD5 md5 = new MD5CryptoServiceProvider();
+                //return md5.ComputeHash(File.ReadAllBytes(file));
+                return md5.ComputeHash(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x07 });
             }
             else
             {

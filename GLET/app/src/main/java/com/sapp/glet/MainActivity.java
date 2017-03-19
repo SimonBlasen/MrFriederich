@@ -124,12 +124,12 @@ public class MainActivity extends AppCompatActivity
 
                 byte[] bytes = Filer.getHash(theContext);
 
-                TextView textView = (TextView) findViewById(R.id.textViewBytes);
+                TextView textView = (TextView) findViewById(R.id.textViewMsg);
 
                 String text = "";
                 for (int i = 0; i < bytes.length; i++)
                 {
-                    text += "," + String.valueOf(bytes[i] + 128);
+                    text += "," + String.valueOf(bytes[i]);
                 }
 
                 textView.setText(text);

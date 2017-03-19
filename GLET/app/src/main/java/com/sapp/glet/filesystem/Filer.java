@@ -31,14 +31,15 @@ public class Filer {
 
         byte[] hash = new byte[] {};
         try {
-            hash = java.security.MessageDigest.getInstance("MD5").digest(readFileBytes(context, "test.txt"));
+            //hash = java.security.MessageDigest.getInstance("MD5").digest(readFileBytes(context, "test.txt"));
+            hash = java.security.MessageDigest.getInstance("MD5").digest(new byte[] {0x01, 0x02, 0x03, 0x04, 0x05, 0x07});
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
         lastHash = hash;
 
-        //writeFile(context, "test.txt", "123457");
+        writeFile(context, "test.txt", "123457");
 
         return hash;
     }

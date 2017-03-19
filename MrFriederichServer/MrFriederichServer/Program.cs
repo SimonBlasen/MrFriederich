@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using UnityServer;
+using System.IO;
 
 namespace MrFriederichServer
 {
     class Program
     {
+        static string filePath = ".\\test.txt";
         static Server server;
         static Encoding encoding;
 
@@ -93,6 +96,23 @@ namespace MrFriederichServer
                 server.SendAll(encoding.GetBytes(concated));
                 ConsoleWriteline("Sent message to all");
             }
+
+            else if (commands.Length >= 1 && commands[0] == "gethash")
+            {
+                byte[] hash = getFileHash(filePath);
+                string hashString = "";
+                for (int i = 0; i < hash.Length; i++)
+                {
+                    hashString += Convert.ToString(hash[i]) + ",";
+                }
+                hashString = hashString.Substring(0, hashString.Length - 1);
+                ConsoleWriteline("Calculated hash: " + hashString);
+            }
+
+            else if (commands.Length >= 1 && commands[0] == "close")
+            {
+                server.CloseServer();
+            }
         }
 
 
@@ -101,6 +121,19 @@ namespace MrFriederichServer
         {
             Console.WriteLine(text);
             Console.Write("> ");
+        }
+
+        private static byte[] getFileHash(string file)
+        {
+            if (File.Exists(file))
+            {
+                MD5 md5 = MD5.Create();
+                return md5.ComputeHash(File.ReadAllBytes(file));
+            }
+            else
+            {
+                return new byte[] { };
+            }
         }
     }
 }

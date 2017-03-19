@@ -122,7 +122,17 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 //stopService(intentService);
 
-                Filer.getHash(theContext);
+                byte[] bytes = Filer.getHash(theContext);
+
+                TextView textView = (TextView) findViewById(R.id.textViewBytes);
+
+                String text = "";
+                for (int i = 0; i < bytes.length; i++)
+                {
+                    text += "," + String.valueOf(bytes[i] + 128);
+                }
+
+                textView.setText(text);
             }
         });
 

@@ -1,0 +1,8 @@
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Release\MrFriederichServer.exe.config
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Release\MrFriederichServer.exe
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Release\MrFriederichServer.pdb
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Release\LibraryUnityServer.dll
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\bin\Release\LibraryUnityServer.pdb
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\obj\Release\MrFriederichServer.csprojResolveAssemblyReference.cache
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\obj\Release\MrFriederichServer.exe
+D:\Dokumente\GitHub\MrFriederich\MrFriederichServer\MrFriederichServer\obj\Release\MrFriederichServer.pdb

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Simon on 17.03.2017.
@@ -21,16 +22,25 @@ public class Filer {
 
     public static byte[] getHash(Context context)
     {
-        String fileContent = readFile(context, "test.txt");
+        /*String fileContent = readFile(context, "test.txt");
         if (fileContent.length() == 0)
         {
             writeFile(context, "test.txt", "123456");
+        }*/
+
+
+        byte[] hash = new byte[] {};
+        try {
+            hash = java.security.MessageDigest.getInstance("MD5").digest(readFileBytes(context, "test.txt"));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
 
+        lastHash = hash;
 
-        return new byte[] {};
+        //writeFile(context, "test.txt", "123457");
 
-        //byte[] hash = java.security.MessageDigest.getInstance("MD5").digest()
+        return hash;
     }
 
 
@@ -45,6 +55,11 @@ public class Filer {
         catch (IOException e) {
 
         }
+    }
+
+    public static void writeFileBytes(Context context, String filename, byte[] content)
+    {
+
     }
 
     public static byte[] readFileBytes(Context context, String filename)

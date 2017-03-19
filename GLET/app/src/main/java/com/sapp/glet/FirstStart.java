@@ -2,6 +2,7 @@ package com.sapp.glet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sapp.glet.database.Database;
 import com.sapp.glet.database.Player;
+import com.sapp.glet.database.stats.StatsParagon;
 
 
 public class FirstStart extends AppCompatActivity {
@@ -22,7 +25,6 @@ public class FirstStart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.first_start);
 
-
         //Player Namensfeld
         final EditText text_player_name = (EditText) findViewById(R.id.text_player_name);
 
@@ -31,9 +33,18 @@ public class FirstStart extends AppCompatActivity {
         b_to_main.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                //Toast "Spieler prüfen"
+                Toast.makeText(getApplicationContext(),"Player wird geprüft", Toast.LENGTH_SHORT).show();
 
-                //Toast "Spieler Erstellt"
-                Toast.makeText(getApplicationContext(),"Player erstellt", Toast.LENGTH_SHORT).show();
+                //Player in Database eintragen
+                Player player_me = new Player("");
+                String name_input = text_player_name.getText().toString();
+                player_me.setName(name_input);
+                Database.addPlayer(player_me);
+                //TODO Download Elo from Agora
+                StatsParagon paragon = new StatsParagon(player_me.getName());
+                paragon.loadScore();
+                player_me.addStats(paragon);
 
                 //Starte Main Activity
                 Intent launch_main_activity = new Intent(theContext, MainActivity.class);

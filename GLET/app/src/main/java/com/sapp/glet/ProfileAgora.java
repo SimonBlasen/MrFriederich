@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sapp.glet.database.Database;
 import com.sapp.glet.database.Player;
 import com.sapp.glet.database.stats.StatsParagon;
 import com.sapp.glet.database.stats.StatsType;
@@ -25,15 +26,12 @@ public class ProfileAgora extends AppCompatActivity {
         TextView text_player_league = (TextView) findViewById(R.id.text_player_leauge);
         ImageView score_logo = (ImageView) findViewById(R.id.score_logo);
 
-        Player tom = new Player(1,"Tom");
-        StatsParagon tom_paragon = new StatsParagon(tom);
-        tom.addM_stats(tom_paragon);
+        Player test = Database.getPlayer(0);
 
 
+        StatsParagon test_stats = (StatsParagon) test.getStats(StatsType.PARAGON);
 
-        StatsParagon tom_stats = (StatsParagon) tom.getStats(StatsType.PARAGON);
-
-        String league = tom_stats.getLeague();
+       String league = test_stats.getLeague();
 
 
         switch (league){
@@ -64,8 +62,8 @@ public class ProfileAgora extends AppCompatActivity {
                 score_logo.setImageResource(R.mipmap.ic_diamond);
                 break;
         }
-        text_player_name.setText(tom.getM_name());
-        text_player_score.setText("" + tom_stats.getScore(tom));
+        text_player_name.setText(test.getName());
+        text_player_score.setText("" + ((StatsParagon) test.getStats(StatsType.PARAGON)).getScore());
         text_player_league.setText(league);
 
 

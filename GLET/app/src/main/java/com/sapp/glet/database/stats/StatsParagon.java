@@ -22,45 +22,53 @@ public class StatsParagon extends Stats {
 
 
 
-    private int score = 0;
-    private String league;
+    private int m_score = 0;
+    private String m_name;
+    private String m_league;
 
-    public StatsParagon(Player player){
-        score = getScore(player);
-        calcLeague(player);
+    public StatsParagon(String name){
+        loadScore();
+        calcLeague(m_score);
+    }
+
+    public StatsParagon(String name, int score){
+        m_score = score;
+        calcLeague(score);
     };
 
+    public int getScore(){
+        return m_score;
+    }
 
-    public int getScore(Player p){
+
+    public void loadScore(){
         //TODO
         // Score wird von Agora geladen
-        return 900;
+         m_score = 42;
     }
 
     public String getLeague(){
-        return league;
+        return m_league;
     }
 
 
 
-    public void calcLeague(Player player){
+    public void calcLeague(int score){
         if (score <= BRONCE_VAL){
-            league = BRONCE;
+            m_league = BRONCE;
         }
         else if (score <= SILVER_VAL){
-            league = SILVER;
+            m_league = SILVER;
         }
         else if (score <= GOLD_VAL){
-            league = GOLD;
+            m_league = GOLD;
         }
         else if (score <= PLAIN_VAL){
-            league = PLATIN;
+            m_league = PLATIN;
         }
         else{
-            league = DIAMOND;
+            m_league = DIAMOND;
         }
     }
-
-
 
 }

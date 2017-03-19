@@ -15,12 +15,13 @@ import java.util.List;
  * Created by Simon on 04.03.2017.
  */
 
-//Jeder Player hat Liste mit Stats?!
 
 public class Player {
 
     private String m_name;
     private boolean m_isOnline = false;
+    //Generiere Id mit id_count und clacId()
+    private static int id_count;
 
     private List<Stats> m_stats = new ArrayList<Stats>();
     /**
@@ -28,20 +29,15 @@ public class Player {
      */
     private int m_id;
 
-    public Player(int id)
-    {
-        m_id = id;
-    }
-    public Player(int id, String name)
-    {
-        m_id = id;
+    public Player(String name){
+        m_id = calcId();
         m_name = name;
-
     }
 
-    public void setM_name(String name){this.m_name = name;}
+    public void setName(String name){this.m_name = name;}
 
-    public String getM_name(){return m_name;}
+
+    public void setId(int id){m_id = id;}
 
     public int getId() {
         return m_id;
@@ -55,11 +51,11 @@ public class Player {
         return m_name;
     }
 
-    public void addM_stats(Stats stats){
+    public void addStats(Stats stats){
         m_stats.add(stats);
     }
 
-
+    //Gebe Stats für bestimmtes Spiel zurück
     public Stats getStats(StatsType type) {
        if(m_stats != null){
 
@@ -80,27 +76,34 @@ public class Player {
                }
 
            }
-
-
-           if(type == StatsType.PARAGON){
-               for(int i = 0; i < m_stats.size(); i++){
-                   if(m_stats.get(i) instanceof StatsParagon){
-                       return m_stats.get(i);
-                   }
-               }
-           }
-
-
-
-
-
            return null;
        }
-
-
        else{
            return null;
        }
+    }
+    //Füge Stats hinzu
+    public void setStats(Stats stats){
+        m_stats.add(stats);
+    }
+
+
+
+
+    //Prüft ob Name nicht leer ist und ob Name existiert
+    public static boolean validName(String name){
+        if(name.equals("")){
+            return false;
+        }
+        //TODO prüfe ob Spieler in Datenbank
+
+        return true;
+    }
+
+    public int calcId(){
+        int id = id_count;
+        id_count++;
+        return id;
     }
 
 

@@ -17,6 +17,20 @@ public class Database {
     private static List<Game> m_games = new ArrayList<Game>();
 
     /**
+     * Returns list of current registered Players
+     * @return List of all players
+     */
+    public static List<Player> getPlayers(){
+        return m_players;
+    }
+
+    public static void addPlayer(Player player){
+        m_players.add(player);
+    }
+
+
+
+    /**
      * Returns the current amount of players available in total
      * @return The amount of players
      */

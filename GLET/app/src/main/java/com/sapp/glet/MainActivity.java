@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -102,6 +103,18 @@ public class MainActivity extends AppCompatActivity
 
         intentService = new Intent(this, HelloService.class);
 
+        //Prüfe ob erster Start - wenn ja first_launch, sonst main.
+        boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
+        Log.w("ASDf", "isFirstTime " + isFirstTime);
+        if(isFirstTime){
+            Log.w("ASDF","bin im IF");
+            Intent intent_firsttime = new Intent(theContext, FirstStart.class);
+            startActivity(intent_firsttime);
+        }
+
+
+
+
         Button buttonSend = (Button) findViewById(R.id.button);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,14 +157,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        Button b_create_player = (Button) findViewById(R.id.button_create_player);
-        b_create_player.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent launch_create_player = new Intent(theContext, CreatePlayer.class);
-                theContext.startActivity(launch_create_player);
-            }
-        });
 
 
 

@@ -47,8 +47,17 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".StartGame" />
         <activity android:name=".ProfileAgora" />
+        <activity
+            android:name=".StartGame"
+            android:label="@string/title_activity_start_game"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sapp.glet.MainActivity" />
+        </activity>
+        <activity android:name=".FirstStart"></activity>
     </application>
 
 </manifest>

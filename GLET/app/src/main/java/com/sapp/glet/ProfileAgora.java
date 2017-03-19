@@ -31,9 +31,9 @@ public class ProfileAgora extends AppCompatActivity {
 
 
 
-        StatsParagon test = (StatsParagon) tom.getStats(StatsType.PARAGON);
+        StatsParagon tom_stats = (StatsParagon) tom.getStats(StatsType.PARAGON);
 
-        String league = test.getLeague();
+        String league = tom_stats.getLeague();
 
 
         switch (league){
@@ -65,7 +65,7 @@ public class ProfileAgora extends AppCompatActivity {
                 break;
         }
         text_player_name.setText(tom.getM_name());
-        text_player_score.setText("" + test.getScore(tom));
+        text_player_score.setText("" + tom_stats.getScore(tom));
         text_player_league.setText(league);
 
 

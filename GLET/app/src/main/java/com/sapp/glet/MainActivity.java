@@ -139,8 +139,17 @@ public class MainActivity extends AppCompatActivity
         b_profile.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent launch_profile = new Intent(theContext, AgoraProfile.class);
+                Intent launch_profile = new Intent(theContext, ProfileAgora.class);
                 theContext.startActivity(launch_profile);
+            }
+        });
+
+        Button b_create_player = (Button) findViewById(R.id.button_create_player);
+        b_create_player.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent launch_create_player = new Intent(theContext, CreatePlayer.class);
+                theContext.startActivity(launch_create_player);
             }
         });
 

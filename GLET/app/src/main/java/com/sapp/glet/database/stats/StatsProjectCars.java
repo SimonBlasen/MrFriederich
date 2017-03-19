@@ -5,4 +5,5 @@ package com.sapp.glet.database.stats;
  */
 
 public class StatsProjectCars extends Stats {
+
 }

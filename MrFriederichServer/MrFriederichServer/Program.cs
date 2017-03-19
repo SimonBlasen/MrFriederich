@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using UnityServer;
 using System.IO;
+using MrFriederichServer.Data;
 
 namespace MrFriederichServer
 {
@@ -15,10 +16,15 @@ namespace MrFriederichServer
         static Server server;
         static Encoding encoding;
 
+        static List<User> users;
+
         static void Main(string[] args)
         {
             Console.Write("> ");
             ConsoleWriteline("Starting server...");
+
+            users = new List<User>();
+
             server = new Server(24400);
             server.ClientConnect += Server_ClientConnect;
             server.ClientDisconnect += Server_ClientDisconnect;
@@ -48,6 +54,29 @@ namespace MrFriederichServer
         private static void Server_ReceiveMessage(string ip, int port, byte[] message)
         {
             ConsoleWriteline("Received TCP from \"" + ip + "\":\"" + port + "\". Length=" + message.Length);
+
+            if (message.Length >= 2)
+            {
+                if (message[0] == 0 && message[1] == 2)
+                {
+                    int playerId = (message[2] << 24) | (message[3] << 16) | (message[4] << 8) | (message[5]);
+                    bool isNew = true;
+                    for (int i = 0; i < users.Count; i++)
+                    {
+                        if (users[i].Id == playerId)
+                        {
+                            isNew = false;
+                            break;
+                        }
+                    }
+
+                    if (isNew)
+                    {
+                        User user = new User(playerId);
+                        users.Add(user);
+                    }
+                }
+            }
         }
 
         private static void Server_ClientDisconnect(string ip, int port)
@@ -58,6 +87,8 @@ namespace MrFriederichServer
         private static void Server_ClientConnect(string ip, int port)
         {
             ConsoleWriteline("Connection from \"" + ip + "\":\"" + port + "\"");
+
+            server.Send(ip, port, new byte[] { 0, 1, 0 });
         }
 
         private static async void CommandExecute(string[] commands)
@@ -109,6 +140,14 @@ namespace MrFriederichServer
                 ConsoleWriteline("Calculated hash: " + hashString);
             }
 
+            else if (commands.Length >= 1 && commands[0] == "listusers")
+            {
+                for (int i = 0; i < users.Count; i++)
+                {
+                    ConsoleWriteline("users[" + i + "]: " + users[i].ToString());
+                }
+            }
+
             else if (commands.Length >= 1 && commands[0] == "close")
             {
                 server.CloseServer();
@@ -128,8 +167,8 @@ namespace MrFriederichServer
             if (File.Exists(file))
             {
                 MD5 md5 = new MD5CryptoServiceProvider();
-                //return md5.ComputeHash(File.ReadAllBytes(file));
-                return md5.ComputeHash(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x07 });
+                return md5.ComputeHash(File.ReadAllBytes(file));
+                //return md5.ComputeHash(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x07 });
             }
             else
             {

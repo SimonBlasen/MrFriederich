@@ -1,8 +1,10 @@
 package com.sapp.glet;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +16,7 @@ import com.sapp.glet.database.stats.StatsType;
 import org.w3c.dom.Text;
 
 public class ProfileAgora extends AppCompatActivity {
-
+    Context theContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +28,11 @@ public class ProfileAgora extends AppCompatActivity {
         TextView text_player_league = (TextView) findViewById(R.id.text_player_leauge);
         ImageView score_logo = (ImageView) findViewById(R.id.score_logo);
 
-        Player test = Database.getPlayer(0);
 
+
+
+
+        Player test = Database.getPlayer(0);
 
         StatsParagon test_stats = (StatsParagon) test.getStats(StatsType.PARAGON);
 

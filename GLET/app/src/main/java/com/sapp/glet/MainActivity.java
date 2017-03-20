@@ -27,10 +27,13 @@ import android.widget.Toast;
 
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
+import com.sapp.glet.database.Database;
 import com.sapp.glet.filesystem.Filer;
 import com.sapp.glet.service.HelloService;
 import com.sapp.glet.service.MessengerService;
 import com.sapp.glet.service.PullService;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -105,9 +108,7 @@ public class MainActivity extends AppCompatActivity
 
         //Prüfe ob erster Start - wenn ja first_launch, sonst main.
         boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
-        Log.w("ASDf", "isFirstTime " + isFirstTime);
         if(isFirstTime){
-            Log.w("ASDF","bin im IF");
             Intent intent_firsttime = new Intent(theContext, FirstStart.class);
             startActivity(intent_firsttime);
         }
@@ -156,6 +157,14 @@ public class MainActivity extends AppCompatActivity
                 theContext.startActivity(launch_profile);
             }
         });
+
+
+        //Debug
+        TextView debug = (TextView) findViewById(R.id.textView3);
+        String file = Database.getPlayersCache(theContext);
+        debug.setText(file);
+
+        //End Debug
 
 
 

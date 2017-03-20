@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +46,14 @@ public class FirstStart extends AppCompatActivity {
                 StatsParagon paragon = new StatsParagon(player_me.getName());
                 paragon.loadScore();
                 player_me.addStats(paragon);
+
+                Database.createPlayersCache(theContext);
+                Log.w("ASDF","PlayersCache Created");
+                Database.writePlayersCache(theContext);
+                Log.w("ASDF","PlayersCache Written");
+
+
+
 
                 //Starte Main Activity
                 Intent launch_main_activity = new Intent(theContext, MainActivity.class);

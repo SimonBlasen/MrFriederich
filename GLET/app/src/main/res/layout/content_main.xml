@@ -91,4 +91,15 @@
         android:layout_marginBottom="44dp"
         android:text="Start Game" />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/switch1"
+        android:layout_alignStart="@+id/switch1"
+        android:layout_below="@+id/button2"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:text="TextView" />
+
 </RelativeLayout>

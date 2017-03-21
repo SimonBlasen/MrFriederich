@@ -1,5 +1,6 @@
 package com.sapp.glet.database;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.sapp.glet.database.stats.Stats;
@@ -106,6 +107,7 @@ public class Player {
 
     public int calcId(){
         int id = id_count;
+
         id_count++;
         return id;
     }

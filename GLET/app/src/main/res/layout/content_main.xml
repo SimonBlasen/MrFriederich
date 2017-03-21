@@ -105,10 +105,32 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/textView2"
-        android:layout_alignRight="@+id/textView2"
+        android:width="110dp"
+        android:height="240dp"
+        android:text="TextView"
         android:layout_below="@+id/button4"
-        android:layout_marginTop="21dp"
-        android:text="TextView" />
+        android:layout_toLeftOf="@+id/button_profile"
+        android:layout_toStartOf="@+id/button_profile" />
+
+    <Button
+        android:id="@+id/b_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button4"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="18dp"
+        android:layout_toEndOf="@+id/button_start_game"
+        android:layout_toRightOf="@+id/button_start_game"
+        android:text="Daten generieren" />
+
+    <Button
+        android:id="@+id/b_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_start_game"
+        android:layout_alignLeft="@+id/b_data"
+        android:layout_alignStart="@+id/b_data"
+        android:text="Daten laden" />
 
 </RelativeLayout>

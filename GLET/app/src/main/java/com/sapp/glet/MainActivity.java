@@ -39,6 +39,7 @@ import com.sapp.glet.service.PullService;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MessageListener {
@@ -168,22 +169,52 @@ public class MainActivity extends AppCompatActivity
         //Debug
         Log.w("TEST", "Versuche database zu erstellen");
         Database.loadDatabase(theContext);
-        Log.w("TEST", "Database Erstellt");
-
-        TextView debug = (TextView) findViewById(R.id.textView3);
-
-
         for(int i = 0; i < Database.getPlayers().size(); i ++){
             Player player = Database.getPlayers().get(i);
-            debug.setText(debug.getText() + " " + player.getName());
+            Log.w("NICE", "V1 SPielername = " + player.getName());
+            Log.w("NICE", "V1 Spielerid = " + player.getId());
+
         }
 
+        Button b_data = (Button) findViewById(R.id.b_data);
+        b_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("OLAF", "DataGenerieren gedrückt");
+                for(int j = 0; j < 10; j++){
+                    Player autoplayer = new Player("AutoPlayer"+j);
+                    Database.addPlayer(autoplayer);
+
+                }
+                Log.w("OLAF", "Database File Erstellt");
+                Database.writePlayersCache(theContext);
+            }
+        });
 
 
-        if(Database.getPlayer(0) != null){
-            Log.w("TEST", "Player Index 0 = " + Database.getPlayer(0).getName());
-            Log.w("TEST", "Player Index 1 = " + Database.getPlayer(1).getName());
-        }
+        Button b_load = (Button) findViewById(R.id.b_load);
+        b_load.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.loadDatabase(theContext);
+                Log.w("OLAF", "Database File geladen");
+
+
+                TextView debug = (TextView) findViewById(R.id.textView3);
+
+                for(int i = 0; i < Database.getPlayers().size(); i ++){
+                    Player player = Database.getPlayers().get(i);
+                    Log.w("NICE", "SPielername = " + player.getName());
+                    Log.w("NICE", "Spielerid = " + player.getId());
+                    debug.setText(debug.getText() + "\n" + player.getName());
+                }
+                Log.w("OLAF", "widget aktualisiert");
+
+            }
+        });
+
+
+
 
 
         //getApplication().startService(new Intent(getApplication(), PullService.class));
@@ -196,6 +227,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG);
         }*/
     }
+
 
     @Override
     public void onBackPressed() {

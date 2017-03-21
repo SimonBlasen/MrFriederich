@@ -48,10 +48,9 @@ public class FirstStart extends AppCompatActivity {
                 player_me.addStats(paragon);
 
                 Database.createPlayersCache(theContext);
-                Log.w("TEST","PlayersCache Created");
+                Log.w("NICE","PlayersCache Created");
                 Database.writePlayersCache(theContext);
-                Log.w("TEST","PlayersCache Written");
-
+                Log.w("NICE","PlayersCache Written");
 
                 //Starte Main Activity
                 Intent launch_main_activity = new Intent(theContext, MainActivity.class);

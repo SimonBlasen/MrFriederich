@@ -30,8 +30,6 @@ public class ProfileAgora extends AppCompatActivity {
 
 
 
-
-
         Player test = Database.getPlayer(0);
 
         StatsParagon test_stats = (StatsParagon) test.getStats(StatsType.PARAGON);

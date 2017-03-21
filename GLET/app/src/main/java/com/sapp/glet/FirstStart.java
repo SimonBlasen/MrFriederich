@@ -25,7 +25,7 @@ public class FirstStart extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.first_start);
-
+        Log.w("TEST", "First Launch.class");
         //Player Namensfeld
         final EditText text_player_name = (EditText) findViewById(R.id.text_player_name);
 
@@ -48,11 +48,9 @@ public class FirstStart extends AppCompatActivity {
                 player_me.addStats(paragon);
 
                 Database.createPlayersCache(theContext);
-                Log.w("ASDF","PlayersCache Created");
+                Log.w("TEST","PlayersCache Created");
                 Database.writePlayersCache(theContext);
-                Log.w("ASDF","PlayersCache Written");
-
-
+                Log.w("TEST","PlayersCache Written");
 
 
                 //Starte Main Activity

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -28,6 +29,8 @@ import android.widget.Toast;
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
 import com.sapp.glet.database.Database;
+import com.sapp.glet.database.DatabaseManager;
+import com.sapp.glet.database.Player;
 import com.sapp.glet.filesystem.Filer;
 import com.sapp.glet.service.HelloService;
 import com.sapp.glet.service.MessengerService;
@@ -50,6 +53,8 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         theContext = this;
+
+        Button test = (Button) findViewById(R.id.button4);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -109,6 +114,7 @@ public class MainActivity extends AppCompatActivity
         //Prüfe ob erster Start - wenn ja first_launch, sonst main.
         boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
         if(isFirstTime){
+            Log.w("TEST", "erster Start!");
             Intent intent_firsttime = new Intent(theContext, FirstStart.class);
             startActivity(intent_firsttime);
         }
@@ -160,14 +166,24 @@ public class MainActivity extends AppCompatActivity
 
 
         //Debug
+        Log.w("TEST", "Versuche database zu erstellen");
+        Database.loadDatabase(theContext);
+        Log.w("TEST", "Database Erstellt");
+
         TextView debug = (TextView) findViewById(R.id.textView3);
-        String file = Database.getPlayersCache(theContext);
-        debug.setText(file);
-
-        //End Debug
 
 
+        for(int i = 0; i < Database.getPlayers().size(); i ++){
+            Player player = Database.getPlayers().get(i);
+            debug.setText(debug.getText() + " " + player.getName());
+        }
 
+
+
+        if(Database.getPlayer(0) != null){
+            Log.w("TEST", "Player Index 0 = " + Database.getPlayer(0).getName());
+            Log.w("TEST", "Player Index 1 = " + Database.getPlayer(1).getName());
+        }
 
 
         //getApplication().startService(new Intent(getApplication(), PullService.class));

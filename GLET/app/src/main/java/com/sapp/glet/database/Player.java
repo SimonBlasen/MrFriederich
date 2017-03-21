@@ -47,6 +47,10 @@ public class Player {
         return m_isOnline;
     }
 
+    public void setIsOnline(boolean online){
+        m_isOnline = online;
+    }
+
     public String getName() {
         return m_name;
     }

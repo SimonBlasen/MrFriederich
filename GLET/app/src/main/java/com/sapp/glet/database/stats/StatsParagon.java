@@ -23,7 +23,6 @@ public class StatsParagon extends Stats {
 
 
     private int m_score = 0;
-    private String m_name;
     private String m_league;
 
     public StatsParagon(String name){
@@ -31,7 +30,7 @@ public class StatsParagon extends Stats {
         calcLeague(m_score);
     }
 
-    public StatsParagon(String name, int score){
+    public StatsParagon(int score){
         m_score = score;
         calcLeague(score);
     };
@@ -44,7 +43,7 @@ public class StatsParagon extends Stats {
     public void loadScore(){
         //TODO
         // Score wird von Agora geladen
-         m_score = 42;
+         m_score = 1700;
     }
 
     public String getLeague(){

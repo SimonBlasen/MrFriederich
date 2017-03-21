@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import static com.sapp.glet.StartGame.PlaceholderFragment.newInstance;
+
 public class StartGame extends AppCompatActivity {
 
     /**
@@ -81,23 +83,16 @@ public class StartGame extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-/*    *//**
-     * A placeholder fragment containing a simple view.
-     *//*
+    // A placeholder fragment containing a simple view.
+
     public static class PlaceholderFragment extends Fragment {
-        *//**
-         * The fragment argument representing the section number for this
-         * fragment.
-         *//*
+
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
         }
 
-        *//**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         *//*
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -116,10 +111,6 @@ public class StartGame extends AppCompatActivity {
         }
     }
 
-    *//**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
 
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -130,8 +121,17 @@ public class StartGame extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            BlankFragment fragment = new BlankFragment();
-            return fragment;
+            //BlankFragment fragment = new BlankFragment();
+            //return newInstance(position+1);
+            //return fragment;
+            Log.w("TAGG", "Swipe");
+            switch(position){
+                case 0: return BlankFragment.newInstance("", "");
+                case 1: return BlankFragment2.newInstance("", "");
+                case 2: return BlankFragment2.newInstance("", "");
+            }
+
+            return BlankFragment.newInstance("", "");
         }
 
         @Override

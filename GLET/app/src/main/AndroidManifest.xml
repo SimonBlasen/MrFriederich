@@ -58,6 +58,8 @@
                 android:value="com.sapp.glet.MainActivity" />
         </activity>
         <activity android:name=".FirstStart"></activity>
+
+
     </application>
 
 </manifest>

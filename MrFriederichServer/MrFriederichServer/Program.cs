@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using UnityServer;
 using System.IO;
 using MrFriederichServer.Data;
+using System.Timers;
 
 namespace MrFriederichServer
 {
@@ -15,6 +16,8 @@ namespace MrFriederichServer
         static string filePath = ".\\test.txt";
         static Server server;
         static Encoding encoding;
+
+        static Timer timer;
 
         static List<User> users;
 
@@ -32,6 +35,11 @@ namespace MrFriederichServer
             ConsoleWriteline("Server running on port 24400");
 
             encoding = Encoding.UTF8;
+
+            timer = new Timer();
+            timer.Interval = 5000;
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
 
             ConsoleWriteline("Used encoding: " + encoding.ToString());
 
@@ -51,15 +59,39 @@ namespace MrFriederichServer
             }
         }
 
+        /**
+         * This timer checks the UStates of the Users and re-requests information, if not received yet
+         * */
+        private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            for (int i = 0; i < users.Count; i++)
+            {
+                if (users[i].State == UState.WAIT_FOR_FILEHASH)
+                {
+                    server.Send(users[i].Ip, users[i].Port, new byte[] { 0, 3, 0 });
+                }
+            }
+        }
+
         private static void Server_ReceiveMessage(string ip, int port, byte[] message)
         {
             ConsoleWriteline("Received TCP from \"" + ip + "\":\"" + port + "\". Length=" + message.Length);
 
             if (message.Length >= 2)
             {
+                User user = null;
+                if (message.Length >= 6)
+                {
+                    int playerId = (message[2] << 24) | (message[3] << 16) | (message[4] << 8) | (message[5]);
+                    user = getUserById(playerId);
+                }
+
+                // Received a users name and id
                 if (message[0] == 0 && message[1] == 2)
                 {
                     int playerId = (message[2] << 24) | (message[3] << 16) | (message[4] << 8) | (message[5]);
+                    //TODO parse name and set it to the user
+                    //...
                     bool isNew = true;
                     for (int i = 0; i < users.Count; i++)
                     {
@@ -72,8 +104,19 @@ namespace MrFriederichServer
 
                     if (isNew)
                     {
-                        User user = new User(playerId);
-                        users.Add(user);
+                        User newUser = new User(playerId, ip, port);
+                        newUser.State = UState.WAIT_FOR_FILEHASH;
+                        users.Add(newUser);
+                    }
+                }
+
+                // Received a filehash from an user
+                else if (message[0] == 0 && message[1] == 4)
+                {
+                    if (user != null)
+                    {
+                        user.State = UState.IDLE;
+                        //TODO save and compare hash
                     }
                 }
             }
@@ -87,7 +130,7 @@ namespace MrFriederichServer
         private static void Server_ClientConnect(string ip, int port)
         {
             ConsoleWriteline("Connection from \"" + ip + "\":\"" + port + "\"");
-
+            
             server.Send(ip, port, new byte[] { 0, 1, 0 });
         }
 
@@ -174,6 +217,19 @@ namespace MrFriederichServer
             {
                 return new byte[] { };
             }
+        }
+
+        private static User getUserById(int id)
+        {
+            for (int i = 0; i < users.Count; i++)
+            {
+                if (users[i].Id == id)
+                {
+                    return users[i];
+                }
+            }
+
+            return null;
         }
     }
 }

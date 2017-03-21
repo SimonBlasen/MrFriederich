@@ -4,8 +4,8 @@ TCP Messages
 
 	Zum Server:
 
-	 Own Name					0			2			[plyrID<<24][plyrID<<16][plyrID<<8]	[plyrID]
-	 Own file hash				0			4			[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		
+	 Own Name					0			2			[plyrID<<24][plyrID<<16][plyrID<<8]	[plyrID]	[Name in bytes...]
+	 Own file hash				0			4			[plyrID<<24][plyrID<<16][plyrID<<8]	[plyrID]	[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		
 
 	Vom Server:
 

@@ -6,14 +6,25 @@ using System.Threading.Tasks;
 
 namespace MrFriederichServer.Data
 {
+    public enum UState
+    {
+        IDLE, WAIT_FOR_PLAYERID, WAIT_FOR_FILEHASH
+    }
+
     public class User
     {
+        private string ip;
+        private int port;
+
         private int playerId;
         private string name;
         private byte[] lastHash;
+        private UState state;
 
-        public User(int playerId)
+        public User(int playerId, string ip, int port)
         {
+            this.ip = ip;
+            this.port = port;
             this.playerId = playerId;
             this.name = "None";
             lastHash = new byte[] { };
@@ -43,11 +54,39 @@ namespace MrFriederichServer.Data
             }
         }
 
+        public string Ip
+        {
+            get
+            {
+                return ip;
+            }
+        }
+
+        public int Port
+        {
+            get
+            {
+                return port;
+            }
+        }
+
         public byte[] LastHash
         {
             get
             {
                 return lastHash;
+            }
+        }
+
+        public UState State
+        {
+            get
+            {
+                return state;
+            }
+            set
+            {
+                state = value;
             }
         }
 

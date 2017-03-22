@@ -1,12 +1,16 @@
 package com.sapp.glet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,7 +67,31 @@ public class FragmentParagon extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_paragon, container, false);
+
+        Log.w("BENNI", "onCreateView");
+
+        View view =  inflater.inflate(R.layout.fragment_paragon, container, false);
+
+        Log.w("BENNI", "View erstellt");
+        Button bParagonTest = (Button) view.findViewById(R.id.b_paragon_test);
+
+        Log.w("BENNI", "Button erstellt");
+
+        bParagonTest.setText("HALLO");
+        bParagonTest.setClickable(false);
+
+        CheckBox cParagonTest = (CheckBox) view.findViewById(R.id.c_paragon_test);
+        cParagonTest.setOnClickListener(new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            Log.w("ASDF", "On click!");
+            Intent intent = new Intent(getContext(),MainActivity.class);
+            Log.w("ASDF", "Intent erstellt");
+            getContext().startActivity(intent);
+        }
+    });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -79,8 +107,8 @@ public class FragmentParagon extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            //throw new RuntimeException(context.toString()
+            //        + " must implement OnFragmentInteractionListener");
         }
     }
 

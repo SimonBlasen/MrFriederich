@@ -126,7 +126,7 @@ public class StartGame extends AppCompatActivity {
             //return fragment;
             Log.w("TAGG", "Swipe");
             switch(position){
-                case 0: return BlankFragment.newInstance("", "");
+                case 0: return FragmentParagon.newInstance("", "");
                 case 1: return BlankFragment2.newInstance("", "");
                 case 2: return BlankFragment2.newInstance("", "");
             }

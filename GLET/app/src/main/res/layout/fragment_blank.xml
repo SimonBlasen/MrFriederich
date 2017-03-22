@@ -45,18 +45,14 @@
             android:layout_marginTop="34dp"
             android:text="CheckBox" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/b_launch_game"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="94dp"
+            android:text="TextView" />
 
     </RelativeLayout>
 </FrameLayout>

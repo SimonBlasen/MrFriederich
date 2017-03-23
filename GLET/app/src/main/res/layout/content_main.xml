@@ -45,13 +45,13 @@
         android:id="@+id/editTextMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textViewMsg"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="26dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Message" />
+        android:text="Message"
+        android:layout_below="@+id/textViewMsg"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/button"
@@ -70,4 +70,67 @@
         android:layout_toEndOf="@+id/editTextMsg"
         android:layout_toRightOf="@+id/editTextMsg"
         android:text="Button" />
+
+    <Button
+        android:id="@+id/button_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="72dp"
+        android:layout_toLeftOf="@+id/button2"
+        android:layout_toStartOf="@+id/button2"
+        android:text="My Profile" />
+
+    <Button
+        android:id="@+id/button_start_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_profile"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/button_profile"
+        android:layout_marginBottom="44dp"
+        android:text="Start Game" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
+        android:text="Button"
+        android:layout_below="@+id/editTextMsg"
+        android:layout_toLeftOf="@+id/button_profile"
+        android:layout_toStartOf="@+id/button_profile" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:width="110dp"
+        android:height="240dp"
+        android:text="TextView"
+        android:layout_below="@+id/button4"
+        android:layout_toLeftOf="@+id/button_profile"
+        android:layout_toStartOf="@+id/button_profile" />
+
+    <Button
+        android:id="@+id/b_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button4"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="18dp"
+        android:layout_toEndOf="@+id/button_start_game"
+        android:layout_toRightOf="@+id/button_start_game"
+        android:text="Daten generieren" />
+
+    <Button
+        android:id="@+id/b_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_start_game"
+        android:layout_alignLeft="@+id/b_data"
+        android:layout_alignStart="@+id/b_data"
+        android:text="Daten laden" />
+
 </RelativeLayout>

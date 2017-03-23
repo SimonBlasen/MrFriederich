@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,12 +28,18 @@ import android.widget.Toast;
 
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
+import com.sapp.glet.database.Database;
+import com.sapp.glet.database.DatabaseManager;
+import com.sapp.glet.database.Player;
 import com.sapp.glet.filesystem.Filer;
 import com.sapp.glet.service.HelloService;
 import com.sapp.glet.service.MessengerService;
 import com.sapp.glet.service.PullService;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MessageListener {
@@ -46,6 +54,8 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         theContext = this;
+
+        Button test = (Button) findViewById(R.id.button4);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -102,6 +112,17 @@ public class MainActivity extends AppCompatActivity
 
         intentService = new Intent(this, HelloService.class);
 
+        //Prüfe ob erster Start - wenn ja first_launch, sonst main.
+        boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
+        if(isFirstTime){
+            Log.w("TEST", "erster Start!");
+            Intent intent_firsttime = new Intent(theContext, FirstStart.class);
+            startActivity(intent_firsttime);
+        }
+
+
+
+
         Button buttonSend = (Button) findViewById(R.id.button);
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +157,75 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        Button b_game = (Button) findViewById(R.id.button_start_game);
+        b_game.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent launch_profile = new Intent(theContext, StartGame.class);
+                theContext.startActivity(launch_profile);
+            }
+        });
+
+        Button b_profile = (Button) findViewById(R.id.button_profile);
+        b_profile.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent launch_profile = new Intent(theContext, ProfileAgora.class);
+                theContext.startActivity(launch_profile);
+            }
+        });
+
+
+        //Debug
+        Log.w("TEST", "Versuche database zu erstellen");
+        Database.loadDatabase(theContext);
+        for(int i = 0; i < Database.getPlayers().size(); i ++){
+            Player player = Database.getPlayers().get(i);
+            Log.w("NICE", "V1 SPielername = " + player.getName());
+            Log.w("NICE", "V1 Spielerid = " + player.getId());
+
+        }
+
+        Button b_data = (Button) findViewById(R.id.b_data);
+        b_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("OLAF", "DataGenerieren gedrückt");
+                for(int j = 0; j < 10; j++){
+                    Player autoplayer = new Player("AutoPlayer"+j);
+                    Database.addPlayer(autoplayer);
+
+                }
+                Log.w("OLAF", "Database File Erstellt");
+                Database.writePlayersCache(theContext);
+            }
+        });
+
+
+        Button b_load = (Button) findViewById(R.id.b_load);
+        b_load.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database.loadDatabase(theContext);
+                Log.w("OLAF", "Database File geladen");
+
+
+                TextView debug = (TextView) findViewById(R.id.textView3);
+
+                for(int i = 0; i < Database.getPlayers().size(); i ++){
+                    Player player = Database.getPlayers().get(i);
+                    Log.w("NICE", "SPielername = " + player.getName());
+                    Log.w("NICE", "Spielerid = " + player.getId());
+                    debug.setText(debug.getText() + "\n" + player.getName());
+                }
+                Log.w("OLAF", "widget aktualisiert");
+
+            }
+        });
+
+
+
+
 
         //getApplication().startService(new Intent(getApplication(), PullService.class));
         /*client = new Client("m.m-core.eu", 24400);
@@ -147,6 +237,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG);
         }*/
     }
+
 
     @Override
     public void onBackPressed() {
@@ -186,20 +277,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_start_game) {
+            Intent intent = new Intent(theContext, StartGame.class);
+            theContext.startActivity(intent);
+        } else if (id == R.id.nav_status) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_agora){
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -210,4 +295,6 @@ public class MainActivity extends AppCompatActivity
         TextView tv = (TextView) findViewById(R.id.textViewMsg);
         //tv.setText(message);
     }
+
+
 }

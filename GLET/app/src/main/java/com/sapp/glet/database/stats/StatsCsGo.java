@@ -5,4 +5,5 @@ package com.sapp.glet.database.stats;
  */
 
 public class StatsCsGo extends Stats {
+
 }

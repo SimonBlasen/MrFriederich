@@ -131,7 +131,19 @@ public class MainActivity extends AppCompatActivity
                 //client.send(editText.getText().toString().getBytes());
                 //client.send(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
 
-                startService(intentService);
+                // ##############
+                //
+                // Beim einkommentieren dieser Zeile und dem druecken des entsprechenden Buttons wird ein Service gestartet, der hemmungen hat, zu sterben
+                //
+                // ##############
+
+                //startService(intentService);
+
+                // ##############
+                //
+                //
+                //
+                // ##############
 
 
             }

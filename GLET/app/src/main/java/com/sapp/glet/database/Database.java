@@ -12,6 +12,7 @@ import com.sapp.glet.database.stats.StatsCsGo;
 import com.sapp.glet.database.stats.StatsParagon;
 import com.sapp.glet.database.stats.StatsProjectCars;
 import com.sapp.glet.database.stats.StatsType;
+import com.sapp.glet.filesystem.Filer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,6 +35,9 @@ public class Database {
     private static List<Player> m_players = new ArrayList<Player>();
     private static List<Game> m_games = new ArrayList<Game>();
     private static final String PLAYERS_CACHE_FILENAME = "players_cache";
+    private static final String PLAYER_ME_ID = "player_own_id";
+
+    private static int m_own_id = -1;
 
     public static void loadDatabase(Context context){
         String[] data = loadPlayersCache(context);
@@ -141,7 +145,25 @@ public class Database {
         m_players.add(player);
     }
 
+    public static void setOwnId(Context context, int id)
+    {
+        m_own_id = id;
 
+        Filer.writeFile(context, PLAYER_ME_ID, String.valueOf(m_own_id));
+    }
+
+    public static int getOwnId(Context context)
+    {
+        if (m_own_id == -1)
+        {
+            String fileContent = Filer.readFile(context, PLAYER_ME_ID);
+            if (fileContent != null && fileContent.length() > 0)
+            {
+                m_own_id = Integer.valueOf(fileContent);
+            }
+        }
+        return m_own_id;
+    }
 
     /**
      * Returns the current amount of players available in total
@@ -162,6 +184,20 @@ public class Database {
             return m_players.get(index);
         else
             return null;
+    }
+
+    @Nullable
+    public static Player getPlayerById(int id)
+    {
+        for (int i = 0; i < m_players.size(); i++)
+        {
+            if (m_players.get(i).getId() == id)
+            {
+                return m_players.get(i);
+            }
+        }
+
+        return null;
     }
 
 

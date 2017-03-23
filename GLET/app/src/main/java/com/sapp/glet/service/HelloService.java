@@ -35,6 +35,8 @@ public class HelloService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
 
+    public static Client client;
+
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
 
@@ -51,7 +53,8 @@ public class HelloService extends Service {
             // For our sample, we just sleep for 5 seconds.
 
 
-            Client client = new Client("m.m-core.eu", 24400);
+            //Client client = new Client("m.m-core.eu", 24400);
+            client = new Client("m.m-core.eu", 24400);
             boolean connected = false;
 
             while (true)
@@ -71,41 +74,18 @@ public class HelloService extends Service {
                             public void recieveMessage(String message, byte[] bytes) {
                                 timeout = 0;
 
-                                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                if (bytes.length >= 2)
+                                {
+                                    if (bytes[0] == 0 && bytes[1] == 1)
+                                    {
+                                        client.send(new byte[] {0, 2 });
+                                    }
+                                }
 
-                                NotificationCompat.Builder mBuilder =
-                                        new NotificationCompat.Builder(notifyContext)
-                                                .setSmallIcon(R.drawable.ic_menu_camera).setContentInfo("Right Inf").setSubText("Sub Text").setVibrate(new long[] {0, 100, 200, 300, 300}).setSound(alarmSound)
-                                                .setContentTitle("My notification")
-                                                .setContentText("Length: " + bytes.length);
-
-
-// Creates an explicit intent for an Activity in your app
-                                Intent resultIntent = new Intent(notifyContext, MainActivity.class);
-
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
-                                TaskStackBuilder stackBuilder = TaskStackBuilder.create(notifyContext);
-// Adds the back stack for the Intent (but not the Intent itself)
-                                stackBuilder.addParentStack(MainActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-                                stackBuilder.addNextIntent(resultIntent);
-                                PendingIntent resultPendingIntent =
-                                        stackBuilder.getPendingIntent(
-                                                0,
-                                                PendingIntent.FLAG_UPDATE_CURRENT
-                                        );
-                                mBuilder.setContentIntent(resultPendingIntent);
-                                NotificationManager mNotificationManager =
-                                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-// mId allows you to update the notification later on.
-                                mNotificationManager.notify(0, mBuilder.build());
                             }
                         });
 
-                        client.send(new byte[] {0, 2, 0, 1, 2, 3});
+                        //client.send(new byte[] {0, 2, 0, 1, 2, 3});
                     }
 
 
@@ -182,5 +162,44 @@ public class HelloService extends Service {
 
         super.onDestroy();
         //sendBroadcast(new Intent("IWillStartAuto"));
+    }
+
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void notify(Context context, String title, String content)
+    {
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_menu_camera).setContentInfo("Right Inf").setSubText("Sub Text").setVibrate(new long[] {0, 100, 200, 300, 300}).setSound(alarmSound)
+                        .setContentTitle(title)
+                        .setContentText(content);
+
+
+// Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(context, MainActivity.class);
+
+// The stack builder object will contain an artificial back stack for the
+// started Activity.
+// This ensures that navigating backward from the Activity leads out of
+// your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+// Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        mNotificationManager.notify(0, mBuilder.build());
     }
 }

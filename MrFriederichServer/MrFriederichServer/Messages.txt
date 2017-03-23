@@ -11,3 +11,4 @@ TCP Messages
 
 	 Need playerId				0			1			0
 	 Need file hash				0			3			0
+	 Watchdog					0			5			0

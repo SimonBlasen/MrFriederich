@@ -70,6 +70,11 @@ namespace MrFriederichServer
                 {
                     server.Send(users[i].Ip, users[i].Port, new byte[] { 0, 3, 0 });
                 }
+                else if (users[i].State == UState.IDLE)
+                {
+                    //Send watchdog
+                    server.Send(users[i].Ip, users[i].Port, new byte[] { 0, 5, 0 });
+                }
             }
         }
 

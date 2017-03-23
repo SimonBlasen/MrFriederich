@@ -70,6 +70,10 @@ namespace MrFriederichServer
                 {
                     server.Send(users[i].Ip, users[i].Port, new byte[] { 0, 3, 0 });
                 }
+                else if (users[i].State == UState.WAIT_FOR_PLAYERID)
+                {
+                    server.Send(users[i].Ip, users[i].Port, new byte[] { 0, 1, 0 });
+                }
                 else if (users[i].State == UState.IDLE)
                 {
                     //Send watchdog
@@ -85,19 +89,31 @@ namespace MrFriederichServer
             if (message.Length >= 2)
             {
                 User user = null;
-                if (message.Length >= 6)
+                if (message.Length >= 6 && (message[0] != 0 || message[1] != 2))
                 {
                     int playerId = (message[2] << 24) | (message[3] << 16) | (message[4] << 8) | (message[5]);
                     user = getUserById(playerId);
+                }
+                else
+                {
+                    for (int i = 0; i < users.Count; i++)
+                    {
+                        if (users[i].Ip == ip && users[i].Port == port)
+                        {
+                            user = users[i];
+                            break;
+                        }
+                    }
                 }
 
                 // Received a users name and id
                 if (message[0] == 0 && message[1] == 2)
                 {
                     int playerId = (message[2] << 24) | (message[3] << 16) | (message[4] << 8) | (message[5]);
-                    //TODO parse name and set it to the user
-                    //...
-                    bool isNew = true;
+
+                    string playerName = System.Text.Encoding.UTF8.GetString(message, 6, message.Length - 6);
+
+                    /*bool isNew = true;
                     for (int i = 0; i < users.Count; i++)
                     {
                         if (users[i].Id == playerId)
@@ -111,8 +127,19 @@ namespace MrFriederichServer
                     {
                         User newUser = new User(playerId, ip, port);
                         newUser.State = UState.WAIT_FOR_FILEHASH;
+                        user = newUser;
                         users.Add(newUser);
-                    }
+                    }*/
+
+                    user.Id = playerId;
+                    user.Name = playerName;
+                    user.State = UState.WAIT_FOR_FILEHASH;
+
+                    ConsoleWriteline("Got playerName and id:");
+                    ConsoleWriteline("Playername: " + user.Name);
+                    ConsoleWriteline("Id: " + user.Id);
+
+                    kickAllOtherUsersWithSameId(user);
                 }
 
                 // Received a filehash from an user
@@ -135,7 +162,11 @@ namespace MrFriederichServer
         private static void Server_ClientConnect(string ip, int port)
         {
             ConsoleWriteline("Connection from \"" + ip + "\":\"" + port + "\"");
-            
+
+            User newUser = new User(ip, port);
+            newUser.State = UState.WAIT_FOR_PLAYERID;
+            users.Add(newUser);
+
             server.Send(ip, port, new byte[] { 0, 1, 0 });
         }
 
@@ -235,6 +266,27 @@ namespace MrFriederichServer
             }
 
             return null;
+        }
+
+        private static void kickAllOtherUsersWithSameId(User realUser)
+        {
+            for (int i = 0; i < users.Count; i++)
+            {
+                if (users[i].Id == realUser.Id && (users[i].Ip != realUser.Ip || users[i].Port != realUser.Port))
+                {
+                    ConsoleWriteline("Kicked an user");
+                    users.RemoveAt(i);
+                    i--;
+                }
+            }
+            
+            for (int i = 0; i < users.Count; i++)
+            {
+                if (users[i].Id == realUser.Id)
+                {
+                    ConsoleWriteline("Still exists: " + users[i].Name + ", With ip=" + users[i].Ip + " and port=" + users[i].Port);
+                }
+            }
         }
     }
 }

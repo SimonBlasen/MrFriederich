@@ -18,14 +18,17 @@ import android.os.Message;
 import android.os.Process;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.sapp.glet.MainActivity;
 import com.sapp.glet.R;
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
+import com.sapp.glet.database.Database;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Created by Simon on 15.03.2017.
@@ -57,6 +60,9 @@ public class HelloService extends Service {
             client = new Client("m.m-core.eu", 24400);
             boolean connected = false;
 
+            Database.loadDatabase(notifyContext);
+            Log.w("SEND", "Loaded Database");
+
             while (true)
             {
                 timeout++;
@@ -64,6 +70,7 @@ public class HelloService extends Service {
                     if ((!connected) || timeout > 6)
                     {
                         connected = client.Connect();
+                        Log.w("SEND", "Reconnect");
                         timeout = 0;
                     }
 
@@ -74,11 +81,44 @@ public class HelloService extends Service {
                             public void recieveMessage(String message, byte[] bytes) {
                                 timeout = 0;
 
+                                String str = "";
+                                for (int i = 0; i < bytes.length; i++)
+                                {
+                                    str += String.valueOf(bytes[i]);
+                                }
+
+                                Log.w("SEND", "Received sth: " + str);
+
+                                Log.w("SEND", "Rec0");
                                 if (bytes.length >= 2)
                                 {
+                                    Log.w("SEND", "Rec1");
+                                    // Need playerId
                                     if (bytes[0] == 0 && bytes[1] == 1)
                                     {
-                                        client.send(new byte[] {0, 2 });
+                                        Log.w("SEND", "Rec2");
+                                        if (Database.getSelf(notifyContext) ==  null)
+                                        {
+                                            Log.w("SEND", "getSelf if NULL");
+                                        }
+
+                                        int playerId = Database.getOwnId(notifyContext);
+                                        byte[] sBytes = new byte[6 + Database.getSelf(notifyContext).getName().getBytes(Charset.forName("UTF-8")).length];
+
+                                        Log.w("SEND", String.valueOf(playerId));
+                                        Log.w("SEND", Database.getSelf(notifyContext).getName());
+
+                                        sBytes[0] = 0;
+                                        sBytes[1] = 2;
+                                        sBytes[2] = (byte)(playerId >> 24);
+                                        sBytes[3] = (byte)(playerId >> 16);
+                                        sBytes[4] = (byte)(playerId >> 8);
+                                        sBytes[5] = (byte)(playerId);
+                                        for (int i = 0; i < sBytes.length - 6; i++)
+                                        {
+                                            sBytes[i + 6] = Database.getSelf(notifyContext).getName().getBytes(Charset.forName("UTF-8"))[i];
+                                        }
+                                        client.send(sBytes);
                                     }
                                 }
 

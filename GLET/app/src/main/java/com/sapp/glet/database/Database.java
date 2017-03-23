@@ -157,6 +157,7 @@ public class Database {
         if (m_own_id == -1)
         {
             String fileContent = Filer.readFile(context, PLAYER_ME_ID);
+            Log.w("SEND", "FileContent: " + fileContent);
             if (fileContent != null && fileContent.length() > 0)
             {
                 m_own_id = Integer.valueOf(fileContent);
@@ -198,6 +199,11 @@ public class Database {
         }
 
         return null;
+    }
+
+    public static Player getSelf(Context context)
+    {
+        return getPlayerById(getOwnId(context));
     }
 
 

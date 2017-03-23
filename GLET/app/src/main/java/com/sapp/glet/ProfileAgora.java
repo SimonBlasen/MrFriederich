@@ -32,7 +32,7 @@ public class ProfileAgora extends AppCompatActivity {
 
 
         //Player test = Database.getPlayer(0);
-        Player test = Database.getPlayerById(Database.getOwnId(theContext));
+        Player test = Database.getSelf(theContext);
 
         if (test != null)
         {

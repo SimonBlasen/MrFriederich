@@ -30,6 +30,15 @@ namespace MrFriederichServer.Data
             lastHash = new byte[] { };
         }
 
+        public User(string ip, int port)
+        {
+            this.ip = ip;
+            this.port = port;
+            this.playerId = -1;
+            this.name = "None";
+            lastHash = new byte[] { };
+        }
+
         public string Name
         {
             get

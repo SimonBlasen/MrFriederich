@@ -47,7 +47,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ProfileAgora" />
+        <activity
+            android:name=".ProfileAgora"
+            android:label="Agora Profil"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".StartGame"
             android:label="@string/title_activity_start_game"

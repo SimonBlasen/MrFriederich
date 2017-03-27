@@ -1,5 +1,7 @@
 package com.sapp.glet;
 
+import android.content.Context;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -39,6 +41,7 @@ public class StartGame extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    Context theContext = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,4 +156,12 @@ public class StartGame extends AppCompatActivity {
             return null;
         }
     }
+
+
+    //Menü Stuff
+
+
+
+
+
 }

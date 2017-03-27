@@ -22,7 +22,7 @@ public class Player {
     private String m_name;
     private boolean m_isOnline = false;
     //Generiere Id mit id_count und clacId()
-    private static int id_count;
+    private static int id_count = 0;
 
     private List<Stats> m_stats = new ArrayList<Stats>();
     /**

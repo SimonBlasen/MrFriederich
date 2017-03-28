@@ -1,7 +1,6 @@
 package com.sapp.glet;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.sapp.glet.database.Database;
+import com.sapp.glet.database.Player;
+import com.sapp.glet.gamelauncher.GameRequestHandler;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,38 +74,59 @@ public class FragmentParagon extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        Log.w("BENNI", "onCreateView");
 
         View view =  inflater.inflate(R.layout.fragment_paragon, container, false);
 
-        Log.w("BENNI", "View erstellt");
-        Button bParagonTest = (Button) view.findViewById(R.id.b_paragon_test);
 
-        Log.w("BENNI", "Button erstellt");
+        //Dynamic Player List
+        //List with players
+        List<Player> playerList = Database.getPlayers();
 
-        bParagonTest.setText("HALLO");
-        bParagonTest.setClickable(false);
-
-        CheckBox cParagonTest = (CheckBox) view.findViewById(R.id.c_paragon_test);
-        cParagonTest.setOnClickListener(new View.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            Log.w("ASDF", "On click!");
-            Intent intent = new Intent(getContext(),MainActivity.class);
-            Log.w("ASDF", "Intent erstellt");
-            getContext().startActivity(intent);
+        String[] data = new String[playerList.size()];
+        for(int i = 0; i < playerList.size(); i++){
+            data[i] = playerList.get(i).getName();
         }
-    });
+        PlayerListAdapter playerListAdapter = new PlayerListAdapter(getContext(),data);
+        ListView list = (ListView) view.findViewById(R.id.list_ListView);
+        list.setAdapter(playerListAdapter);
+
+        playerListAdapter.setOnCheckBoxChangeListener(new CheckBoxChangeListener() {
+            @Override
+            public void OnCheckBoxChecked(int position) {
+                Player player = Database.getPlayers().get(position);
+                Log.w("bug5", "added Player = " + player.getName());
+                GameRequestHandler.addInvitedPlayer(player);
+            }
+
+            @Override
+            public void OnCheckBoxUnChecked(int position) {
+                Log.w("bug5", "unchecked");
+                Player player = GameRequestHandler.getInvitedPlayers().get(position);
+                Log.w("bug5", "removed Player = " + player.getName());
+                GameRequestHandler.removeInvitedPlayer(position);
+            }
+        });
+
+
+
+        //Debug TODO Remove
+        final TextView debug = (TextView) view.findViewById(R.id.debug);
+
+        Button debug2 = (Button) view.findViewById(R.id.debug2);
+        debug2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> debugData = GameRequestHandler.invitedPlayersToString();
+                debug.setText("");
+                for(int i =0; i < debugData.size(); i++){
+                    debug.setText(debug.getText() + "\n" +  debugData.get(i));
+                }
+            }
+        });
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {

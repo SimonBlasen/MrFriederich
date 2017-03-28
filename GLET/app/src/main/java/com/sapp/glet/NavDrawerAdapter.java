@@ -7,6 +7,7 @@ package com.sapp.glet;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,11 @@ public class NavDrawerAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String title = (String) this.getGroup(groupPosition);
-        boolean onlineStatus = Database.getPlayer(0).isOnline();
+        boolean onlineStatus = true;
+        if(Database.getPlayer(0)!= null){//Verhindert Crash beim ersten Start (da Player noch nicht existert
+            Log.w("bug6", "reached");
+            onlineStatus = Database.getPlayer(0).isOnline();
+        }
         if(convertView == null){
             LayoutInflater layoutInflater = (LayoutInflater) this.ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.parent_layout,null);

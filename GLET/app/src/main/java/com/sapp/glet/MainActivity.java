@@ -50,7 +50,14 @@ public class MainActivity extends AppCompatActivity
 
         theContext = this;
 
-        Button test = (Button) findViewById(R.id.button4);
+        //Prüfe ob erster Start - wenn ja first_launch, sonst main.
+        boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
+        if(isFirstTime){
+            Log.w("TEST", "erster Start!");
+            Intent intent_firsttime = new Intent(theContext, FirstStart.class);
+            startActivity(intent_firsttime);
+        }
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -146,6 +153,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
+
 // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.INTERNET)
@@ -175,13 +184,7 @@ public class MainActivity extends AppCompatActivity
 
         intentService = new Intent(this, HelloService.class);
 
-        //Prüfe ob erster Start - wenn ja first_launch, sonst main.
-        boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
-        if(isFirstTime){
-            Log.w("TEST", "erster Start!");
-            Intent intent_firsttime = new Intent(theContext, FirstStart.class);
-            startActivity(intent_firsttime);
-        }
+
 
 
 

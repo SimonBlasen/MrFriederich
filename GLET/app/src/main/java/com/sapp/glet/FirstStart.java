@@ -47,7 +47,7 @@ public class FirstStart extends AppCompatActivity {
                 paragon.loadScore();
                 player_me.addStats(paragon);
 
-                Database.createPlayersCache(theContext);
+                //Database.createPlayersCache(theContext);
                 Log.w("NICE","PlayersCache Created");
                 Database.writePlayersCache(theContext);
                 Log.w("NICE","PlayersCache Written");

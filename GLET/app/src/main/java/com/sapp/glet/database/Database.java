@@ -12,6 +12,7 @@ import com.sapp.glet.database.stats.StatsCsGo;
 import com.sapp.glet.database.stats.StatsParagon;
 import com.sapp.glet.database.stats.StatsProjectCars;
 import com.sapp.glet.database.stats.StatsType;
+import com.sapp.glet.filesystem.FilerDatabase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,46 +41,36 @@ public class Database {
         m_players = playersCacheToPlayerList(data);
     }
 
-    public static void createPlayersCache(Context context){
-        File file = new File(context.getFilesDir(), PLAYERS_CACHE_FILENAME);
-    }
+//    public static void createPlayersCache(Context context){
+//        File file = new File(context.getFilesDir(), PLAYERS_CACHE_FILENAME);
+//    }
 
     //Writes the Players List to a file
     public static void writePlayersCache(Context context){
-        try{
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(PLAYERS_CACHE_FILENAME,Context.MODE_PRIVATE));
+        List<String> database = databaseToList();
+        FilerDatabase.writeFile(context,PLAYERS_CACHE_FILENAME,FilerDatabase.ListToArray(database));
+    }
+
+
+    public static List<String> databaseToList(){
             //iterates over all players
-            for(int i = 0; i < m_players.size(); i++){
+            List<String> data = new ArrayList<>();
+            int currentPos = 0;
+            for(int i = 0; i < m_players.size(); i++) {
                 Player player = m_players.get(i);
-                outputStreamWriter.write("<Player");
-                outputStreamWriter.append("\n");
-                outputStreamWriter.write(player.getName());
-                outputStreamWriter.append("\n");
-                outputStreamWriter.write("" + player.isOnline());
-                outputStreamWriter.append("\n");
-                outputStreamWriter.write("" + player.getId());
-                outputStreamWriter.append("\n");
-                outputStreamWriter.write("<Paragon");
-                outputStreamWriter.append("\n");
-                if(player.getStats(StatsType.PARAGON) != null){
+                data.add("<Player");
+                data.add(player.getName());
+                data.add("" + player.isOnline());
+                data.add("" + player.getId());
+                data.add("<Paragon");
+                if (player.getStats(StatsType.PARAGON) != null) {
                     StatsParagon player_paragon = (StatsParagon) player.getStats(StatsType.PARAGON);
-                    outputStreamWriter.write("" +player_paragon.getScore());
-                    outputStreamWriter.append("\n");
+                    data.add("" + player_paragon.getScore());
                 }
-                outputStreamWriter.write("<\\Paragon>");
-                outputStreamWriter.append("\n");
-                outputStreamWriter.write("<\\Player>");
-                if(i < m_players.size()-1){
-                    outputStreamWriter.append("\n");
-                }
+                data.add("<\\Paragon>");
+                data.add("<\\Player>");
             }
-            outputStreamWriter.close();
-
-
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        return data;
     }
 
     //Loads players from players_cache file

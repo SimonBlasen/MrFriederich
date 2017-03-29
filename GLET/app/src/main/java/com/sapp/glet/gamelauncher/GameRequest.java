@@ -13,16 +13,26 @@ import java.util.List;
 public class GameRequest {
     private List<Player> mInvitedPlayers = new ArrayList<Player>();
     private Game mGame;
-    private Player mRequestPlayer;
+    private Player mRequestHost;
+    private int mStartTime = 0;
 
-    public GameRequest(List<Player> playerList, Game game, Player requestPlayer){
+    public GameRequest(List<Player> playerList, Game game, Player requestHost, int time){
         mInvitedPlayers = playerList;
         mGame = game;
-        mRequestPlayer = requestPlayer;
+        mRequestHost = requestHost;
+        mStartTime = time;
     }
 
     public List<Player> getInvitedPlayers() {
         return mInvitedPlayers;
+    }
+
+    public Game getGame(){
+        return mGame;
+    }
+
+    public Player getRequestHost(){
+        return mRequestHost;
     }
 
 

@@ -3,6 +3,7 @@ package com.sapp.glet;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +15,13 @@ import android.widget.TextView;
 
 import com.sapp.glet.database.Database;
 import com.sapp.glet.database.Player;
+import com.sapp.glet.database.games.Paragon;
+import com.sapp.glet.filesystem.FilerDatabase;
+import com.sapp.glet.gamelauncher.GameRequest;
 import com.sapp.glet.gamelauncher.GameRequestHandler;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +37,11 @@ public class FragmentParagon extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+
+    private static final Paragon GAME_TYPE = new Paragon();
+    private static List<Player> invitedPlayers = new ArrayList<Player>();
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,7 +88,6 @@ public class FragmentParagon extends Fragment {
 
         View view =  inflater.inflate(R.layout.fragment_paragon, container, false);
 
-
         //Dynamic Player List
         //List with players
         List<Player> playerList = Database.getPlayers();
@@ -90,20 +100,24 @@ public class FragmentParagon extends Fragment {
         ListView list = (ListView) view.findViewById(R.id.list_ListView);
         list.setAdapter(playerListAdapter);
 
+
+
+
+
         playerListAdapter.setOnCheckBoxChangeListener(new CheckBoxChangeListener() {
             @Override
             public void OnCheckBoxChecked(int position) {
                 Player player = Database.getPlayers().get(position);
                 Log.w("bug5", "added Player = " + player.getName());
-                GameRequestHandler.addInvitedPlayer(player);
+                FragmentParagon.invitedPlayers.add(player);
+
             }
 
             @Override
             public void OnCheckBoxUnChecked(int position) {
                 Log.w("bug5", "unchecked");
-                Player player = GameRequestHandler.getInvitedPlayers().get(position);
-                Log.w("bug5", "removed Player = " + player.getName());
-                GameRequestHandler.removeInvitedPlayer(position);
+                Player player = Database.getPlayers().get(position);
+                invitedPlayers.remove(Player.getPlayerIndexInList(invitedPlayers,player));
             }
         });
 
@@ -116,14 +130,18 @@ public class FragmentParagon extends Fragment {
         debug2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> debugData = GameRequestHandler.invitedPlayersToString();
-                debug.setText("");
-                for(int i =0; i < debugData.size(); i++){
-                    debug.setText(debug.getText() + "\n" +  debugData.get(i));
-                }
+                GameRequest request = new GameRequest(invitedPlayers,GAME_TYPE,Database.getPlayer(0), 42); //TODO Time
+                GameRequestHandler.addGameRequest(request);
+                GameRequestHandler.writeGameRequestList(getContext());
+                Log.w("bug7", "request written");
             }
         });
 
+        String[] debugdata = FilerDatabase.readFileToStringArray(getContext(),"game_requests");
+        for(int i = 0; i < debugdata.length; i ++){
+            Log.w("bug7", "Inhalt request =" + debugdata[i]);
+            debug.setText(debug.getText() + "\n" + debugdata[i]);
+        }
         return view;
     }
 
@@ -159,4 +177,6 @@ public class FragmentParagon extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

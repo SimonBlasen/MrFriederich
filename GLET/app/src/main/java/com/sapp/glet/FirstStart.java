@@ -46,6 +46,7 @@ public class FirstStart extends AppCompatActivity {
                 StatsParagon paragon = new StatsParagon(player_me.getName());
                 paragon.loadScore();
                 player_me.addStats(paragon);
+                player_me.setIsOnline(true);
 
                 //Database.createPlayersCache(theContext);
                 Log.w("NICE","PlayersCache Created");

@@ -1,14 +1,10 @@
-package com.sapp.glet.gamelauncher;
+package com.sapp.glet.GameRequests;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.sapp.glet.database.Player;
-import com.sapp.glet.database.games.Game;
 import com.sapp.glet.filesystem.FilerDatabase;
 
-import java.io.File;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +56,10 @@ public class GameRequestHandler {
         for(int i = 0; i < gameRequestsList.size(); i++){
             GameRequest gameRequest = gameRequestsList.get(i);
             data.add("<GameRequest");
+            data.add("<Time");
+            data.add("" + gameRequest.getRequestHour());
+            data.add("" + gameRequest.getRequestMinute());
+            data.add("<\\Time>");
             data.add("<Game");
             data.add(gameRequest.getGame().getGameName());
             data.add("<\\Game");
@@ -72,6 +72,7 @@ public class GameRequestHandler {
                 data.add(playerList.get(j).getName());
             }
             data.add("<\\Invited>");
+            data.add("<\\GameRequest>");
         }
         return data;
     }

@@ -1,27 +1,33 @@
 package com.sapp.glet;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
+import com.sapp.glet.GameRequests.Time;
 import com.sapp.glet.database.Database;
 import com.sapp.glet.database.Player;
 import com.sapp.glet.database.games.Paragon;
 import com.sapp.glet.filesystem.FilerDatabase;
-import com.sapp.glet.gamelauncher.GameRequest;
-import com.sapp.glet.gamelauncher.GameRequestHandler;
+import com.sapp.glet.GameRequests.GameRequest;
+import com.sapp.glet.GameRequests.GameRequestHandler;
 
-import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +47,16 @@ public class FragmentParagon extends Fragment {
 
     private static final Paragon GAME_TYPE = new Paragon();
     private static List<Player> invitedPlayers = new ArrayList<Player>();
+
+    //UhrzeitWidget
+    private AlertDialog dialogIn;
+    private AlertDialog dialogAt;
+    int inTime;
+    int atHour;
+    int atMinute;
+    EditText paragonInTime;
+    EditText paragonAtTime;
+    Bundle savedInstanceState;
 
 
     // TODO: Rename and change types of parameters
@@ -86,7 +102,121 @@ public class FragmentParagon extends Fragment {
         // Inflate the layout for this fragment
 
 
+
+        //Clock Widget stuff
+        this.savedInstanceState = savedInstanceState;
+
         View view =  inflater.inflate(R.layout.fragment_paragon, container, false);
+
+        paragonInTime = (EditText) view.findViewById(R.id.eT_paragon_input_in_time);
+        paragonAtTime = (EditText) view.findViewById(R.id.eT_paragon_input_at_time);
+
+
+        // Alert Popup InTime
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Get the layout inflater
+        LayoutInflater inflater_paragon = this.getLayoutInflater(savedInstanceState);
+        // Inflate and set the layout for the popup
+        // Pass null as the parent view because it's going in the popup layout
+        View view_popup1 = inflater.inflate(R.layout.start_time_popup1, null);
+        builder.setView(view_popup1);
+        builder.setTitle("Set the start time");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                paragonInTime.setText(inTime + " Minuten");
+                // Hier noch das andere Feld ändern
+                Date currentTime = new Date();
+                int hours = currentTime.getHours() + 2;
+                int mins = currentTime.getMinutes();
+                mins = mins + inTime;
+                if(mins >= 60){
+                    mins = mins - 60;
+                    hours++;
+                }
+                atHour = hours;
+                atMinute = mins;
+                paragonAtTime.setText(hours + ":" + mins);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+
+            }
+        });
+
+
+        final SeekBar inputTime = (SeekBar) view_popup1.findViewById(R.id.sB_input_time);
+        inputTime.setMax(60);
+        final TextView displayInputTime = (TextView) view_popup1.findViewById(R.id.tV_display_input_time);
+        displayInputTime.setText("Jetzt");
+        inputTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                inTime = inputTime.getProgress();
+                if(inTime == 0){
+                    displayInputTime.setText("Jetzt");
+                }else{
+                    displayInputTime.setText("In " + inTime + " min");
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        dialogIn = builder.create();
+
+
+        // Popup AtTime
+        View view_popup2 = inflater.inflate(R.layout.start_time_popup2, null);
+        builder.setView(view_popup2);
+        builder.setTitle("Set the start time");
+
+        final TimePicker timePick = (TimePicker) view_popup2.findViewById(R.id.tP_input_time);
+        timePick.setIs24HourView(true);
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                atHour = timePick.getCurrentHour();
+                atMinute = timePick.getCurrentMinute();
+                paragonAtTime.setText(atHour + ":" + atMinute);
+
+                int timeDif = Time.calculateTimeDifference(atHour, atMinute);
+
+                paragonInTime.setText(timeDif + " Minuten");
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+
+            }
+        });
+
+
+
+
+        dialogAt = builder.create();
+
+
+        paragonInTime.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                dialogIn.show();
+            }
+        });
+        paragonAtTime.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                dialogAt.show();
+            }
+        });
+
 
         //Dynamic Player List
         //List with players
@@ -119,6 +249,7 @@ public class FragmentParagon extends Fragment {
                 Player player = Database.getPlayers().get(position);
                 invitedPlayers.remove(Player.getPlayerIndexInList(invitedPlayers,player));
             }
+
         });
 
 
@@ -126,11 +257,11 @@ public class FragmentParagon extends Fragment {
         //Debug TODO Remove
         final TextView debug = (TextView) view.findViewById(R.id.debug);
 
-        Button debug2 = (Button) view.findViewById(R.id.debug2);
+        ImageButton debug2 = (ImageButton) view.findViewById(R.id.debug2);
         debug2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GameRequest request = new GameRequest(invitedPlayers,GAME_TYPE,Database.getPlayer(0), 42); //TODO Time
+                GameRequest request = new GameRequest(invitedPlayers,GAME_TYPE,Database.getPlayer(0), atHour, atMinute); //TODO Time
                 GameRequestHandler.addGameRequest(request);
                 GameRequestHandler.writeGameRequestList(getContext());
                 Log.w("bug7", "request written");
@@ -138,6 +269,7 @@ public class FragmentParagon extends Fragment {
         });
 
         String[] debugdata = FilerDatabase.readFileToStringArray(getContext(),"game_requests");
+        debug.setText("");
         for(int i = 0; i < debugdata.length; i ++){
             Log.w("bug7", "Inhalt request =" + debugdata[i]);
             debug.setText(debug.getText() + "\n" + debugdata[i]);

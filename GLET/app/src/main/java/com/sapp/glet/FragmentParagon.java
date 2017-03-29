@@ -1,16 +1,24 @@
 package com.sapp.glet;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.TimePicker;
+
+import com.sapp.glet.GameRequests.Time;
+
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +39,12 @@ public class FragmentParagon extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private AlertDialog dialogIn;
+    private AlertDialog dialogAt;
+    int inTime;
+    int atHour;
+    int atMinute;
+    Bundle savedInstanceState;
 
     public FragmentParagon() {
         // Required empty public constructor
@@ -67,29 +81,119 @@ public class FragmentParagon extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        Log.w("BENNI", "onCreateView");
+        this.savedInstanceState = savedInstanceState;
 
         View view =  inflater.inflate(R.layout.fragment_paragon, container, false);
+        Button bParagonTest = (Button) view.findViewById(R.id.b_paragon_send);
 
-        Log.w("BENNI", "View erstellt");
-        Button bParagonTest = (Button) view.findViewById(R.id.b_paragon_test);
+        final EditText paragonInTime = (EditText) view.findViewById(R.id.eT_paragon_input_in_time);
+        final EditText paragonAtTime = (EditText) view.findViewById(R.id.eT_paragon_input_at_time); 
 
-        Log.w("BENNI", "Button erstellt");
 
-        bParagonTest.setText("HALLO");
-        bParagonTest.setClickable(false);
+        // Alert Popup InTime
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        // Get the layout inflater
+        LayoutInflater inflater_paragon = this.getLayoutInflater(savedInstanceState);
+        // Inflate and set the layout for the popup
+        // Pass null as the parent view because it's going in the popup layout
+        View view_popup1 = inflater.inflate(R.layout.start_time_popup1, null);
+        builder.setView(view_popup1);
+        builder.setTitle("Set the start time");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                paragonInTime.setText(inTime + " Minuten");
+                // Hier noch das andere Feld ändern
+                Date currentTime = new Date();
+                int hours = currentTime.getHours() + 2;
+                int mins = currentTime.getMinutes();
+                mins = mins + inTime;
+                if(mins >= 60){
+                    mins = mins - 60;
+                    hours++;
+                }
+                paragonAtTime.setText(hours + ":" + mins);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
 
-        CheckBox cParagonTest = (CheckBox) view.findViewById(R.id.c_paragon_test);
-        cParagonTest.setOnClickListener(new View.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            Log.w("ASDF", "On click!");
-            Intent intent = new Intent(getContext(),MainActivity.class);
-            Log.w("ASDF", "Intent erstellt");
-            getContext().startActivity(intent);
-        }
-    });
+            }
+        });
+
+
+        final SeekBar inputTime = (SeekBar) view_popup1.findViewById(R.id.sB_input_time);
+        inputTime.setMax(60);
+        final TextView displayInputTime = (TextView) view_popup1.findViewById(R.id.tV_display_input_time);
+        displayInputTime.setText("Jetzt");
+        inputTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                inTime = inputTime.getProgress();
+                if(inTime == 0){
+                    displayInputTime.setText("Jetzt");
+                }else{
+                    displayInputTime.setText("In " + inTime + " min");
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        dialogIn = builder.create();
+
+
+        // Popup AtTime
+        View view_popup2 = inflater.inflate(R.layout.start_time_popup2, null);
+        builder.setView(view_popup2);
+        builder.setTitle("Set the start time");
+
+        final TimePicker timePick = (TimePicker) view_popup2.findViewById(R.id.tP_input_time);
+        timePick.setIs24HourView(true);
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                atHour = timePick.getCurrentHour();
+                atMinute = timePick.getCurrentMinute();
+                paragonAtTime.setText(atHour + ":" + atMinute);
+
+                int timeDif = Time.calculateTimeDifference(atHour, atMinute);
+
+                paragonInTime.setText(timeDif + " Minuten");
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+
+            }
+        });
+
+
+
+
+        dialogAt = builder.create();
+
+
+        paragonInTime.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                dialogIn.show();
+            }
+        });
+        paragonAtTime.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                dialogAt.show();
+            }
+        });
+
+
 
         return view;
     }

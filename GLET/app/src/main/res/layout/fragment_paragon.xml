@@ -83,16 +83,18 @@
             android:textSize="20sp" />
 
 
+
         <ListView
             android:id="@+id/list_ListView"
+            android:padding="2dp"
+            android:background="@drawable/player_list_border"
             android:layout_width="250dp"
             android:layout_height="217dp"
             android:layout_alignLeft="@+id/tV_paragon_at_time"
             android:layout_alignStart="@+id/tV_paragon_at_time"
             android:layout_below="@+id/eT_paragon_input_at_time"
             android:layout_marginTop="19dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false">
+            >
 
         </ListView>
 
@@ -109,13 +111,17 @@
 
         <ImageButton
             android:id="@+id/debug2"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginTop="21dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
             android:scaleType="centerCrop"
+            android:background="@android:color/transparent"
             app:srcCompat="@mipmap/ic_paragon"
             android:layout_below="@+id/list_ListView"
-            android:layout_centerHorizontal="true" />
+            android:layout_alignLeft="@+id/eT_paragon_input_at_time"
+            android:layout_alignStart="@+id/eT_paragon_input_at_time"
+            android:layout_marginLeft="36dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="12dp" />
 
     </RelativeLayout>
 </FrameLayout>

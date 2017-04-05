@@ -99,10 +99,6 @@ public class FragmentParagon extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-
-
         //Clock Widget stuff
         this.savedInstanceState = savedInstanceState;
 
@@ -219,7 +215,12 @@ public class FragmentParagon extends Fragment {
 
 
         //Dynamic Player List
-        //List with players
+        Database.loadDatabase(getContext());
+        //TODO Remove List with Auto players
+        for(int i = 0; i < 10; i++){
+            Player player = new Player("Autoplayer " + i);
+            Database.addPlayer(player);
+        }
         List<Player> playerList = Database.getPlayers();
 
         String[] data = new String[playerList.size()];
@@ -229,8 +230,6 @@ public class FragmentParagon extends Fragment {
         PlayerListAdapter playerListAdapter = new PlayerListAdapter(getContext(),data);
         ListView list = (ListView) view.findViewById(R.id.list_ListView);
         list.setAdapter(playerListAdapter);
-
-
 
 
 
@@ -268,11 +267,12 @@ public class FragmentParagon extends Fragment {
             }
         });
 
-        String[] debugdata = FilerDatabase.readFileToStringArray(getContext(),"game_requests");
+        GameRequestHandler.loadGameRequests(getContext());
+        Log.w("bug7", "GameRequestsLoaded");
+
         debug.setText("");
-        for(int i = 0; i < debugdata.length; i ++){
-            Log.w("bug7", "Inhalt request =" + debugdata[i]);
-            debug.setText(debug.getText() + "\n" + debugdata[i]);
+        for(int i = 0; i < GameRequestHandler.getGameRequests().size(); i++){
+            debug.setText(debug.getText() + "\n" + GameRequestHandler.getGameRequests().get(i).getRequestHost().getName());
         }
         return view;
     }

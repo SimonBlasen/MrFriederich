@@ -41,10 +41,6 @@ public class Database {
         m_players = playersCacheToPlayerList(data);
     }
 
-//    public static void createPlayersCache(Context context){
-//        File file = new File(context.getFilesDir(), PLAYERS_CACHE_FILENAME);
-//    }
-
     //Writes the Players List to a file
     public static void writePlayersCache(Context context){
         List<String> database = databaseToList();
@@ -130,6 +126,15 @@ public class Database {
 
     public static void addPlayer(Player player){
         m_players.add(player);
+    }
+
+    public static Player getPlayerById(int id){
+        for(int i = 0; i < m_players.size(); i++){
+            if(m_players.get(i).getId() == id){
+                return m_players.get(i);
+            }
+        }
+        return null;
     }
 
 

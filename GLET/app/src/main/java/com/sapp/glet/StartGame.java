@@ -128,11 +128,10 @@ public class StartGame extends AppCompatActivity {
             Log.w("TAGG", "Swipe");
             switch(position){
                 case 0: return FragmentParagon.newInstance("", "");
-                case 1: return BlankFragment2.newInstance("", "");
-                case 2: return BlankFragment2.newInstance("", "");
+                case 1: return FragmentCsgo.newInstance("", "");
+                case 2: return FragmentParagon.newInstance("", "");
             }
-
-            return BlankFragment.newInstance("", "");
+            return null;
         }
 
         @Override

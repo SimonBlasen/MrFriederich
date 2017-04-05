@@ -107,4 +107,15 @@ public class FilerDatabase {
 
         return new String[]{};
     }
+
+    public static int countTargetString(String target, String[] data){
+        int count = 0;
+        for(int i = 0; i < data.length; i++){
+            if(data[i].equals(target)){
+                count++;
+            }
+        }
+
+        return count;
+    }
 }

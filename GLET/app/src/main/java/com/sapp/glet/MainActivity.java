@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -182,116 +183,30 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+        final ImageButton c_yes = (ImageButton) findViewById(R.id.c_yes);
+        final ImageButton c_no = (ImageButton) findViewById(R.id.c_no);
+
+        c_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                c_yes.setBackgroundResource(R.mipmap.ic_yes_checked);
+                c_no.setBackgroundResource(R.mipmap.ic_no_unchecked);
+
+            }
+        });
+
+
+        c_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                c_yes.setBackgroundResource(R.mipmap.ic_yes_unchecked);
+                c_no.setBackgroundResource(R.mipmap.ic_no_checked);
+
+            }
+        });
+
+
         intentService = new Intent(this, HelloService.class);
-
-
-
-
-
-
-        Button buttonSend = (Button) findViewById(R.id.button);
-        buttonSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //EditText editText = (EditText) findViewById(R.id.editTextMsg);
-                //client.send(editText.getText().toString().getBytes());
-                //client.send(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
-
-                startService(intentService);
-
-
-            }
-        });
-
-        Button button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //stopService(intentService);
-
-                Filer.getHash(theContext);
-            }
-        });
-
-        Button b_game = (Button) findViewById(R.id.button_start_game);
-        b_game.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent launch_profile = new Intent(theContext, StartGame.class);
-                theContext.startActivity(launch_profile);
-            }
-        });
-
-        Button b_profile = (Button) findViewById(R.id.button_profile);
-        b_profile.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent launch_profile = new Intent(theContext, ProfileAgora.class);
-                theContext.startActivity(launch_profile);
-            }
-        });
-
-
-        //Debug
-        Log.w("TEST", "Versuche database zu erstellen");
-        Database.loadDatabase(theContext);
-        for(int i = 0; i < Database.getPlayers().size(); i ++){
-            Player player = Database.getPlayers().get(i);
-            Log.w("NICE", "V1 SPielername = " + player.getName());
-            Log.w("NICE", "V1 Spielerid = " + player.getId());
-
-        }
-
-        Button b_data = (Button) findViewById(R.id.b_data);
-        b_data.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.w("OLAF", "DataGenerieren gedrückt");
-                for(int j = 0; j < 10; j++){
-                    Player autoplayer = new Player("AutoPlayer"+j);
-                    Database.addPlayer(autoplayer);
-
-                }
-                Log.w("OLAF", "Database File Erstellt");
-                Database.writePlayersCache(theContext);
-            }
-        });
-
-
-        Button b_load = (Button) findViewById(R.id.b_load);
-        b_load.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Database.loadDatabase(theContext);
-                Log.w("OLAF", "Database File geladen");
-
-
-                TextView debug = (TextView) findViewById(R.id.textView3);
-
-                for(int i = 0; i < Database.getPlayers().size(); i ++){
-                    Player player = Database.getPlayers().get(i);
-                    Log.w("NICE", "SPielername = " + player.getName());
-                    Log.w("NICE", "Spielerid = " + player.getId());
-                    debug.setText(debug.getText() + "\n" + player.getName());
-                }
-                Log.w("OLAF", "widget aktualisiert");
-
-            }
-        });
-
-
-
-
-
-        //getApplication().startService(new Intent(getApplication(), PullService.class));
-        /*client = new Client("m.m-core.eu", 24400);
-        client.addListener(this);
-
-        try {
-            client.Connect();
-        } catch (IOException e) {
-            Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG);
-        }*/
     }
 
 
@@ -331,7 +246,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void recieveMessage(String message, byte[] bytes) {
-        TextView tv = (TextView) findViewById(R.id.textViewMsg);
+        //TextView tv = (TextView) findViewById(R.id.textViewMsg);
         //tv.setText(message);
     }
 

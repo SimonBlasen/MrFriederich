@@ -86,9 +86,9 @@
 
         <ListView
             android:id="@+id/list_ListView"
-            android:padding="2dp"
-            android:background="@drawable/player_list_border"
-            android:layout_width="250dp"
+            android:padding="15dp"
+            android:background="@drawable/player_list_shadow"
+            android:layout_width="220dp"
             android:layout_height="217dp"
             android:layout_alignLeft="@+id/tV_paragon_at_time"
             android:layout_alignStart="@+id/tV_paragon_at_time"

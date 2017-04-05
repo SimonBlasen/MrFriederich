@@ -3,7 +3,7 @@ package com.sapp.glet.GameRequests;
 import java.util.Date;
 
 /**
- * Created by Benedict on 29.03.2017.
+ * Created by Backlash on 29.03.2017.
  */
 
 public class Time {

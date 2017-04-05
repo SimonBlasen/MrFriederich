@@ -2,23 +2,33 @@ package com.sapp.glet;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.sapp.glet.GameRequests.Time;
+import com.sapp.glet.database.Database;
+import com.sapp.glet.database.Player;
+import com.sapp.glet.database.games.Paragon;
+import com.sapp.glet.filesystem.FilerDatabase;
+import com.sapp.glet.GameRequests.GameRequest;
+import com.sapp.glet.GameRequests.GameRequestHandler;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,17 +44,26 @@ public class FragmentParagon extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private static final Paragon GAME_TYPE = new Paragon();
+    private static List<Player> invitedPlayers = new ArrayList<Player>();
+
+    //UhrzeitWidget
     private AlertDialog dialogIn;
     private AlertDialog dialogAt;
     int inTime;
     int atHour;
     int atMinute;
+    EditText paragonInTime;
+    EditText paragonAtTime;
     Bundle savedInstanceState;
+
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    private OnFragmentInteractionListener mListener;
 
     public FragmentParagon() {
         // Required empty public constructor
@@ -80,14 +99,13 @@ public class FragmentParagon extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        //Clock Widget stuff
         this.savedInstanceState = savedInstanceState;
 
         View view =  inflater.inflate(R.layout.fragment_paragon, container, false);
-        Button bParagonTest = (Button) view.findViewById(R.id.b_paragon_send);
 
-        final EditText paragonInTime = (EditText) view.findViewById(R.id.eT_paragon_input_in_time);
-        final EditText paragonAtTime = (EditText) view.findViewById(R.id.eT_paragon_input_at_time); 
+        paragonInTime = (EditText) view.findViewById(R.id.eT_paragon_input_in_time);
+        paragonAtTime = (EditText) view.findViewById(R.id.eT_paragon_input_at_time);
 
 
         // Alert Popup InTime
@@ -111,6 +129,8 @@ public class FragmentParagon extends Fragment {
                     mins = mins - 60;
                     hours++;
                 }
+                atHour = hours;
+                atMinute = mins;
                 paragonAtTime.setText(hours + ":" + mins);
             }
         });
@@ -194,16 +214,69 @@ public class FragmentParagon extends Fragment {
         });
 
 
+        //Dynamic Player List
+        Database.loadDatabase(getContext());
+        //TODO Remove List with Auto players
+        for(int i = 0; i < 10; i++){
+            Player player = new Player("Autoplayer " + i);
+            Database.addPlayer(player);
+        }
+        List<Player> playerList = Database.getPlayers();
 
+        String[] data = new String[playerList.size()];
+        for(int i = 0; i < playerList.size(); i++){
+            data[i] = playerList.get(i).getName();
+        }
+        PlayerListAdapter playerListAdapter = new PlayerListAdapter(getContext(),data);
+        ListView list = (ListView) view.findViewById(R.id.list_ListView);
+        list.setAdapter(playerListAdapter);
+
+
+
+        playerListAdapter.setOnCheckBoxChangeListener(new CheckBoxChangeListener() {
+            @Override
+            public void OnCheckBoxChecked(int position) {
+                Player player = Database.getPlayers().get(position);
+                Log.w("bug5", "added Player = " + player.getName());
+                FragmentParagon.invitedPlayers.add(player);
+
+            }
+
+            @Override
+            public void OnCheckBoxUnChecked(int position) {
+                Log.w("bug5", "unchecked");
+                Player player = Database.getPlayers().get(position);
+                invitedPlayers.remove(Player.getPlayerIndexInList(invitedPlayers,player));
+            }
+
+        });
+
+
+
+        //Debug TODO Remove
+        final TextView debug = (TextView) view.findViewById(R.id.debug);
+
+        ImageButton debug2 = (ImageButton) view.findViewById(R.id.debug2);
+        debug2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GameRequest request = new GameRequest(invitedPlayers,GAME_TYPE,Database.getPlayer(0), atHour, atMinute); //TODO Time
+                GameRequestHandler.addGameRequest(request);
+                GameRequestHandler.writeGameRequestList(getContext());
+                Log.w("bug7", "request written");
+            }
+        });
+
+        GameRequestHandler.loadGameRequests(getContext());
+        Log.w("bug7", "GameRequestsLoaded");
+
+        debug.setText("");
+        for(int i = 0; i < GameRequestHandler.getGameRequests().size(); i++){
+            debug.setText(debug.getText() + "\n" + GameRequestHandler.getGameRequests().get(i).getRequestHost().getName());
+        }
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -236,4 +309,6 @@ public class FragmentParagon extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

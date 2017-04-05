@@ -41,16 +41,12 @@ public class FirstStart extends AppCompatActivity {
                 Player player_me = new Player("");
                 String name_input = text_player_name.getText().toString();
                 player_me.setName(name_input);
-                Database.addPlayer(player_me);
                 //TODO Download Elo from Agora
                 StatsParagon paragon = new StatsParagon(player_me.getName());
                 paragon.loadScore();
                 player_me.addStats(paragon);
-
-                Database.createPlayersCache(theContext);
-                Log.w("NICE","PlayersCache Created");
-                Database.writePlayersCache(theContext);
-                Log.w("NICE","PlayersCache Written");
+                player_me.setIsOnline(true);
+                Database.addPlayer(player_me);
 
                 //Starte Main Activity
                 Intent launch_main_activity = new Intent(theContext, MainActivity.class);

@@ -9,36 +9,36 @@
     <RelativeLayout
         android:layout_width="368dp"
         android:layout_height="495dp"
-        tools:layout_editor_absoluteX="9dp"
+        tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
         <TextView
             android:id="@+id/text_player_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"
-            android:textSize="50sp"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:text="Name"
+            android:textSize="50sp" />
 
         <TextView
             android:id="@+id/text_player_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/text_player_name"
+            android:layout_centerHorizontal="true"
             android:text="Score"
             android:textSize="40sp"
-            android:textStyle="bold"
-            android:layout_below="@+id/text_player_name"
-            android:layout_centerHorizontal="true" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/text_player_leauge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="League"
-            android:textSize="20sp"
             android:layout_below="@+id/text_player_score"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:text="League"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/score_logo"

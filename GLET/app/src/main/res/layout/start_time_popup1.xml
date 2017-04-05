@@ -11,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
         android:text="TextView"
-        android:textSize="18dp"/>
+        android:textSize="18sp"/>
 
     <SeekBar
         android:id="@+id/sB_input_time"

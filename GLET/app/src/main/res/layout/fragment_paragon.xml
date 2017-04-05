@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,36 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/b_paragon_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="63dp"
-            android:text="Button"
-            tools:text="Button" />
-
-        <CheckBox
-            android:id="@+id/c_paragon_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/b_paragon_send"
-            android:layout_marginBottom="41dp"
-            android:layout_marginEnd="22dp"
-            android:layout_marginRight="22dp"
-            android:layout_toLeftOf="@+id/b_paragon_send"
-            android:layout_toStartOf="@+id/b_paragon_send"
-            android:text="CheckBox" />
-
         <TextView
             android:id="@+id/tV_paragon_caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="18dp"
-            android:layout_toLeftOf="@+id/b_paragon_send"
-            android:layout_toStartOf="@+id/b_paragon_send"
+            android:layout_marginLeft="21dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="10dp"
             android:text="Sessionstart"
             android:textSize="24sp"
             tools:text="Sessionstart" />
@@ -51,9 +32,9 @@
             android:layout_alignLeft="@+id/tV_paragon_caption"
             android:layout_alignStart="@+id/tV_paragon_caption"
             android:layout_below="@+id/tV_paragon_caption"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="11dp"
             android:text="In:"
             android:textSize="20sp"
             tools:text="In:" />
@@ -62,10 +43,11 @@
             android:id="@+id/tV_paragon_at_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:layout_alignLeft="@+id/tV_paragon_in_time"
             android:layout_alignStart="@+id/tV_paragon_in_time"
-            android:layout_below="@+id/tV_paragon_in_time"
-            android:layout_marginTop="45dp"
+            android:layout_alignTop="@+id/eT_paragon_input_at_time"
+            android:layout_marginTop="10dp"
             android:text="Um:"
             android:textSize="20sp"
             tools:text="Um:" />
@@ -91,14 +73,55 @@
             android:layout_below="@+id/eT_paragon_input_in_time"
             android:layout_marginLeft="11dp"
             android:layout_marginStart="11dp"
-            android:layout_marginTop="23dp"
+            android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/tV_paragon_at_time"
             android:layout_toRightOf="@+id/tV_paragon_at_time"
             android:ems="10"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="time"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
+
+
+
+        <ListView
+            android:id="@+id/list_ListView"
+            android:padding="15dp"
+            android:background="@drawable/player_list_shadow"
+            android:layout_width="220dp"
+            android:layout_height="217dp"
+            android:layout_alignLeft="@+id/tV_paragon_at_time"
+            android:layout_alignStart="@+id/tV_paragon_at_time"
+            android:layout_below="@+id/eT_paragon_input_at_time"
+            android:layout_marginTop="19dp"
+            >
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/debug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/tV_paragon_caption"
+            android:layout_marginEnd="25dp"
+            android:layout_marginRight="25dp"
+            android:text="TextView" />
+
+        <ImageButton
+            android:id="@+id/debug2"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:scaleType="centerCrop"
+            android:background="@android:color/transparent"
+            app:srcCompat="@mipmap/ic_paragon"
+            android:layout_below="@+id/list_ListView"
+            android:layout_alignLeft="@+id/eT_paragon_input_at_time"
+            android:layout_alignStart="@+id/eT_paragon_input_at_time"
+            android:layout_marginLeft="36dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="12dp" />
 
     </RelativeLayout>
 </FrameLayout>

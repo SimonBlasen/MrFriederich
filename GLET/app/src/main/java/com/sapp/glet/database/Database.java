@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.Buffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,8 +36,19 @@ public class Database {
 
     private static List<Player> m_players = new ArrayList<Player>();
     private static List<Game> m_games = new ArrayList<Game>();
-    private static final String PLAYERS_CACHE_FILENAME = "players_cache";
-    private static final String PLAYER_ME_ID = "player_own_id";
+    protected static final String PLAYERS_CACHE_FILENAME = "players_cache";
+    protected static final String PLAYER_ME_ID = "player_own_id";
+
+    /**
+     * In dieser Liste sind alle Dateipfade einzutragen, die mit dem Server synchronisiert werden sollen.
+     * Jedoch nur die Dateien, bei denen immer Zeilenweise Daten hinzugefügt werden, z.B. ein Chatverlauf, oder ein News-Feed oder sowas
+     */
+    private static final List<String> allFiles_Continuous = new ArrayList<String>(Arrays.asList(new String[] {}));
+    /**
+     * In dieser Liste sind alle Dateipfade einzutragen, die mit dem Server synchronisiert werden sollen.
+     * Hier jedoch die Dateien, die immer komplett mit dem Server synchronisiert werden sollen. Es wird also immer die komplette Datei vom Server geholt
+     */
+    private static final List<String> allFiles_CompleteSync = new ArrayList<String>(Arrays.asList(new String[] {PLAYERS_CACHE_FILENAME}));
 
     private static int m_own_id = -1;
 
@@ -270,5 +282,15 @@ public class Database {
             }
         }
         return -1;
+    }
+
+    public static List<String> getAllFiles_Continuous()
+    {
+        return allFiles_Continuous;
+    }
+
+    public static List<String> getAllFiles_CompleteSync()
+    {
+        return allFiles_CompleteSync;
     }
 }

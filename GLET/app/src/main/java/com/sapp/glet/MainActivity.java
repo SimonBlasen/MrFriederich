@@ -185,48 +185,27 @@ public class MainActivity extends AppCompatActivity
 
         final ImageButton c_yes = (ImageButton) findViewById(R.id.c_yes);
         final ImageButton c_no = (ImageButton) findViewById(R.id.c_no);
-                // ##############
-                //
-                // Beim einkommentieren dieser Zeile und dem druecken des entsprechenden Buttons wird ein Service gestartet, der hemmungen hat, zu sterben
-                //
-                // ##############
-
-                // ##############
-                //
-                //
-                //
-                // ##############
 
 
-                TextView textView = (TextView) findViewById(R.id.textViewMsg);
+        // Auskommentiert von Sapphire, weil ich id.button_start_game nicht existent zu sein scheint ;)
 
-                String text = "";
-                for (int i = 0; i < bytes.length; i++)
-                {
-                    text += "," + String.valueOf(bytes[i]);
-                }
-
-                textView.setText(text);
-            }
-        });
-
-        Button b_game = (Button) findViewById(R.id.button_start_game);
+        /*Button b_game = (Button) findViewById(R.id.button_start_game);
         b_game.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent launch_profile = new Intent(theContext, StartGame.class);
                 theContext.startActivity(launch_profile);
             }
-        });
+        });*/
 
-        Button b_profile = (Button) findViewById(R.id.button_profile);
+        /*Button b_profile = (Button) findViewById(R.id.button_profile);
         b_profile.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent launch_profile = new Intent(theContext, ProfileAgora.class);
                 theContext.startActivity(launch_profile);
             }
-        });
+        });*/
 
 
         //Debug
@@ -238,9 +217,7 @@ public class MainActivity extends AppCompatActivity
             Log.w("NICE", "V1 Spielerid = " + player.getId());
 
         }
-        
-        final ImageButton c_yes = (ImageButton) findViewById(R.id.c_yes);
-        final ImageButton c_no = (ImageButton) findViewById(R.id.c_no);
+
 
         c_yes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,7 +240,9 @@ public class MainActivity extends AppCompatActivity
         
         
 
-        Button b_data = (Button) findViewById(R.id.b_data);
+        // Auskommentiert von Sapphire, weil ich id.b_data nicht existent zu sein scheint
+
+        /*Button b_data = (Button) findViewById(R.id.b_data);
         b_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,7 +277,7 @@ public class MainActivity extends AppCompatActivity
                 Log.w("OLAF", "widget aktualisiert");
 
             }
-        });
+        });*/
 
 
         intentService = new Intent(this, HelloService.class);
@@ -349,7 +328,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /*@SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -366,7 +345,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
+    }*/
 
     @Override
     public void recieveMessage(String message, byte[] bytes) {

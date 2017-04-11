@@ -6,14 +6,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,31 +19,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
 import com.sapp.glet.database.Database;
-import com.sapp.glet.database.DatabaseManager;
 import com.sapp.glet.database.Player;
 import com.sapp.glet.filesystem.Filer;
 import com.sapp.glet.service.HelloService;
-import com.sapp.glet.service.MessengerService;
-import com.sapp.glet.service.PullService;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MessageListener {
+        implements MessageListener {
 
-    Client client;
-    Intent intentService;
-    Context theContext;
+    private Client client;
+    private Intent intentService;
+    private Context theContext;
+    private DrawerLayout drawer;
+    private ExpandableListView expandableListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,30 +51,107 @@ public class MainActivity extends AppCompatActivity
 
         theContext = this;
 
-        Button test = (Button) findViewById(R.id.button4);
+        //Prüfe ob erster Start - wenn ja first_launch, sonst main.
+        boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
+        if(isFirstTime){
+            Log.w("TEST", "erster Start!");
+            Intent intent_firsttime = new Intent(theContext, FirstStart.class);
+            startActivity(intent_firsttime);
+        }
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        //NavDrawer Content
+        expandableListView = (ExpandableListView) findViewById(R.id.exp_listview);
+        List<String> Headings = new ArrayList<String>();
+        List<String> L1 = new ArrayList<String>();
+        List<String> L2 = new ArrayList<String>();
+        List<String> L3 = new ArrayList<String>();
+        HashMap<String,List<String>> ChildList = new HashMap<String,List<String>>();
+
+        String heading_items[] = getResources().getStringArray(R.array.header_titles);
+        String l1[] = getResources().getStringArray(R.array.h1_items);
+        String l2[] = getResources().getStringArray(R.array.h2_items);
+        String l3[] = getResources().getStringArray(R.array.h3_items);
+
+        for(String title : heading_items){
+            Headings.add(title);
+        }
+
+        for(String title : l1){
+            L1.add(title);
+        }
+
+        for(String title : l2){
+            L2.add(title);
+        }
+
+        for(String title : l3){
+            L3.add(title);
+        }
+
+
+        ChildList.put(Headings.get(0), L1);
+        ChildList.put(Headings.get(1), L2);
+        ChildList.put(Headings.get(2), L3);
+
+
+        final NavDrawerAdapter navDrawerAdapter = new NavDrawerAdapter(this, Headings, ChildList);
+
+
+        expandableListView.setAdapter(navDrawerAdapter);
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                Intent intent;
+                switch (groupPosition){
+                    case 0:
+                        intent = new Intent(getApplicationContext(),StartGame.class);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        intent = new Intent(getApplicationContext(),ProfileAgora.class);
+                        startActivity(intent);
+                        drawer.closeDrawer(Gravity.LEFT);
+                }
+                return false;
+            }
+        });
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                switch (groupPosition){
+                    case 0:
+                    case 1:
+                        switch (childPosition){
+                            case 0:
+                                //TODO getself methode benutzen.
+                                Database.getPlayer(0).setIsOnline(true);
+                                Toast.makeText(getApplicationContext(), "Online", Toast.LENGTH_SHORT).show();
+                                expandableListView.collapseGroup(1);
+                                break;
+                            case 1:
+                                Toast.makeText(getApplicationContext(), "Beschäftigt", Toast.LENGTH_SHORT).show();
+                                Database.getPlayer(0).setIsOnline(false);
+                                expandableListView.collapseGroup(1);
+                                break;
+                        }
+                }
+                return false;
+            }
+        });
+
+
 
 
 
@@ -110,52 +183,20 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        intentService = new Intent(this, HelloService.class);
-
-        //Prüfe ob erster Start - wenn ja first_launch, sonst main.
-        boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
-        if(isFirstTime){
-            Log.w("TEST", "erster Start!");
-            Intent intent_firsttime = new Intent(theContext, FirstStart.class);
-            startActivity(intent_firsttime);
-        }
-
-
-
-
-        Button buttonSend = (Button) findViewById(R.id.button);
-        buttonSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //EditText editText = (EditText) findViewById(R.id.editTextMsg);
-                //client.send(editText.getText().toString().getBytes());
-                //client.send(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
-
+        final ImageButton c_yes = (ImageButton) findViewById(R.id.c_yes);
+        final ImageButton c_no = (ImageButton) findViewById(R.id.c_no);
                 // ##############
                 //
                 // Beim einkommentieren dieser Zeile und dem druecken des entsprechenden Buttons wird ein Service gestartet, der hemmungen hat, zu sterben
                 //
                 // ##############
 
-                startService(intentService);
-
                 // ##############
                 //
                 //
                 //
                 // ##############
 
-
-            }
-        });
-
-        Button button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //stopService(intentService);
-
-                byte[] bytes = Filer.getHash(theContext);
 
                 TextView textView = (TextView) findViewById(R.id.textViewMsg);
 
@@ -197,6 +238,30 @@ public class MainActivity extends AppCompatActivity
             Log.w("NICE", "V1 Spielerid = " + player.getId());
 
         }
+        
+        final ImageButton c_yes = (ImageButton) findViewById(R.id.c_yes);
+        final ImageButton c_no = (ImageButton) findViewById(R.id.c_no);
+
+        c_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                c_yes.setBackgroundResource(R.mipmap.ic_yes_checked);
+                c_no.setBackgroundResource(R.mipmap.ic_no_unchecked);
+
+            }
+        });
+
+
+        c_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                c_yes.setBackgroundResource(R.mipmap.ic_yes_unchecked);
+                c_no.setBackgroundResource(R.mipmap.ic_no_checked);
+
+            }
+        });
+        
+        
 
         Button b_data = (Button) findViewById(R.id.b_data);
         b_data.setOnClickListener(new View.OnClickListener() {
@@ -236,6 +301,7 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+        intentService = new Intent(this, HelloService.class);
 
 
 
@@ -304,7 +370,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void recieveMessage(String message, byte[] bytes) {
-        TextView tv = (TextView) findViewById(R.id.textViewMsg);
+        //TextView tv = (TextView) findViewById(R.id.textViewMsg);
         //tv.setText(message);
     }
 

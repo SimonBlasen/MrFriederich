@@ -1,5 +1,7 @@
 package com.sapp.glet;
 
+import android.content.Context;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -39,6 +41,7 @@ public class StartGame extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    Context theContext = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,8 +108,6 @@ public class StartGame extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_start_game_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }
@@ -127,11 +128,10 @@ public class StartGame extends AppCompatActivity {
             Log.w("TAGG", "Swipe");
             switch(position){
                 case 0: return FragmentParagon.newInstance("", "");
-                case 1: return BlankFragment2.newInstance("", "");
-                case 2: return BlankFragment2.newInstance("", "");
+                case 1: return FragmentCsgo.newInstance("", "");
+                case 2: return FragmentParagon.newInstance("", "");
             }
-
-            return BlankFragment.newInstance("", "");
+            return null;
         }
 
         @Override
@@ -153,4 +153,12 @@ public class StartGame extends AppCompatActivity {
             return null;
         }
     }
+
+
+    //Menü Stuff
+
+
+
+
+
 }

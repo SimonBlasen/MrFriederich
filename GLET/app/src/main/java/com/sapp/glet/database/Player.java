@@ -23,7 +23,7 @@ public class Player {
     private boolean m_isOnline = false;
 
     //Generiere Id mit id_count und clacId()
-    private static int id_count;
+    private static int id_count = 0;
 
     private List<Stats> m_stats = new ArrayList<Stats>();
     /**
@@ -134,6 +134,15 @@ public class Player {
         }
 
         return calced;
+    }
+    //returns index of a player in list, -1 if player not exists
+    public static int getPlayerIndexInList(List<Player> playerList, Player target){
+        for(int i = 0; i< playerList.size(); i++){
+            if (playerList.get(i).getId() == target.getId()){
+                return i;
+            }
+        }
+        return -1;
     }
 
 

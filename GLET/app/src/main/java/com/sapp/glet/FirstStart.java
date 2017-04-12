@@ -38,15 +38,17 @@ public class FirstStart extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Player wird geprüft", Toast.LENGTH_SHORT).show();
 
                 //Player in Database eintragen
-                Player player_me = new Player("");
-                String name_input = text_player_name.getText().toString();
-                player_me.setName(name_input);
+                Player player_me = new Player(text_player_name.getText().toString());
+                Database.setOwnId(theContext, player_me.getId());
                 //TODO Download Elo from Agora
                 StatsParagon paragon = new StatsParagon(player_me.getName());
                 paragon.loadScore();
                 player_me.addStats(paragon);
                 player_me.setIsOnline(true);
                 Database.addPlayer(player_me);
+                Database.writePlayersCache(getApplicationContext());
+
+                Log.i("SAPPHINF", "Database.playerAmount = " + Database.getPlayersAmount());
 
                 //Starte Main Activity
                 Intent launch_main_activity = new Intent(theContext, MainActivity.class);

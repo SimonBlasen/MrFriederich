@@ -18,14 +18,17 @@ import android.os.Message;
 import android.os.Process;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.sapp.glet.MainActivity;
 import com.sapp.glet.R;
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
+import com.sapp.glet.database.Database;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Created by Simon on 15.03.2017.
@@ -34,6 +37,8 @@ import java.io.IOException;
 public class HelloService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
+
+    public static Client client;
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -51,8 +56,12 @@ public class HelloService extends Service {
             // For our sample, we just sleep for 5 seconds.
 
 
-            Client client = new Client("m.m-core.eu", 24400);
+            //Client client = new Client("m.m-core.eu", 24400);
+            client = new Client("m.m-core.eu", 24400);
             boolean connected = false;
+
+            Database.loadDatabase(notifyContext);
+            Log.w("SEND", "Loaded Database");
 
             while (true)
             {
@@ -61,6 +70,7 @@ public class HelloService extends Service {
                     if ((!connected) || timeout > 6)
                     {
                         connected = client.Connect();
+                        Log.w("SEND", "Reconnect");
                         timeout = 0;
                     }
 
@@ -71,41 +81,51 @@ public class HelloService extends Service {
                             public void recieveMessage(String message, byte[] bytes) {
                                 timeout = 0;
 
-                                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                String str = "";
+                                for (int i = 0; i < bytes.length; i++)
+                                {
+                                    str += String.valueOf(bytes[i]);
+                                }
 
-                                NotificationCompat.Builder mBuilder =
-                                        new NotificationCompat.Builder(notifyContext)
-                                                .setSmallIcon(R.drawable.ic_menu_camera).setContentInfo("Right Inf").setSubText("Sub Text").setVibrate(new long[] {0, 100, 200, 300, 300}).setSound(alarmSound)
-                                                .setContentTitle("My notification")
-                                                .setContentText("Length: " + bytes.length);
+                                Log.w("SEND", "Received sth: " + str);
 
+                                Log.w("SEND", "Rec0");
+                                if (bytes.length >= 2)
+                                {
+                                    Log.w("SEND", "Rec1");
+                                    // Need playerId
+                                    if (bytes[0] == 0 && bytes[1] == 1)
+                                    {
+                                        Log.w("SEND", "Rec2");
+                                        if (Database.getSelf(notifyContext) ==  null)
+                                        {
+                                            Log.w("SEND", "getSelf if NULL");
+                                        }
 
-// Creates an explicit intent for an Activity in your app
-                                Intent resultIntent = new Intent(notifyContext, MainActivity.class);
+                                        int playerId = Database.getOwnId(notifyContext);
+                                        byte[] sBytes = new byte[6 + Database.getSelf(notifyContext).getName().getBytes(Charset.forName("UTF-8")).length];
 
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
-                                TaskStackBuilder stackBuilder = TaskStackBuilder.create(notifyContext);
-// Adds the back stack for the Intent (but not the Intent itself)
-                                stackBuilder.addParentStack(MainActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-                                stackBuilder.addNextIntent(resultIntent);
-                                PendingIntent resultPendingIntent =
-                                        stackBuilder.getPendingIntent(
-                                                0,
-                                                PendingIntent.FLAG_UPDATE_CURRENT
-                                        );
-                                mBuilder.setContentIntent(resultPendingIntent);
-                                NotificationManager mNotificationManager =
-                                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-// mId allows you to update the notification later on.
-                                mNotificationManager.notify(0, mBuilder.build());
+                                        Log.w("SEND", String.valueOf(playerId));
+                                        Log.w("SEND", Database.getSelf(notifyContext).getName());
+
+                                        sBytes[0] = 0;
+                                        sBytes[1] = 2;
+                                        sBytes[2] = (byte)(playerId >> 24);
+                                        sBytes[3] = (byte)(playerId >> 16);
+                                        sBytes[4] = (byte)(playerId >> 8);
+                                        sBytes[5] = (byte)(playerId);
+                                        for (int i = 0; i < sBytes.length - 6; i++)
+                                        {
+                                            sBytes[i + 6] = Database.getSelf(notifyContext).getName().getBytes(Charset.forName("UTF-8"))[i];
+                                        }
+                                        client.send(sBytes);
+                                    }
+                                }
+
                             }
                         });
 
-                        client.send(new byte[] {0, 2, 0, 1, 2, 3});
+                        //client.send(new byte[] {0, 2, 0, 1, 2, 3});
                     }
 
 
@@ -182,5 +202,44 @@ public class HelloService extends Service {
 
         super.onDestroy();
         //sendBroadcast(new Intent("IWillStartAuto"));
+    }
+
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void notify(Context context, String title, String content)
+    {
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_menu_camera).setContentInfo("Right Inf").setSubText("Sub Text").setVibrate(new long[] {0, 100, 200, 300, 300}).setSound(alarmSound)
+                        .setContentTitle(title)
+                        .setContentText(content);
+
+
+// Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(context, MainActivity.class);
+
+// The stack builder object will contain an artificial back stack for the
+// started Activity.
+// This ensures that navigating backward from the Activity leads out of
+// your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+// Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        mNotificationManager.notify(0, mBuilder.build());
     }
 }

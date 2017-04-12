@@ -8,9 +8,12 @@ import com.sapp.glet.database.stats.StatsCsGo;
 import com.sapp.glet.database.stats.StatsParagon;
 import com.sapp.glet.database.stats.StatsProjectCars;
 import com.sapp.glet.database.stats.StatsType;
+import com.sapp.glet.util.DatatypesUtils;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Simon on 04.03.2017.
@@ -21,6 +24,7 @@ public class Player {
 
     private String m_name;
     private boolean m_isOnline = false;
+
     //Generiere Id mit id_count und clacId()
     private static int id_count = 0;
 
@@ -31,11 +35,14 @@ public class Player {
     private int m_id;
 
     public Player(String name){
-        m_id = calcId();
+        m_id = calcId(name);
         m_name = name;
     }
 
-    public void setName(String name){this.m_name = name;}
+    public void setName(String name){
+        this.m_name = name;
+        m_id = calcId(m_name);
+    }
 
 
     public void setId(int id){m_id = id;}
@@ -105,11 +112,42 @@ public class Player {
         return true;
     }
 
-    public int calcId(){
+    public int calcId(String playerName) {
+        // ###
+        // Sapphire, 23.03 - 11:42
+        //
+        // Hab ich geaendert, da id_count im Moment nicht global eindeutig ist, da es ja eine static Variable in Player ist.
+        // calcId() geht jetzt hin, und berechnet aus dem Spielernamen eine (hoffentlich) eindeutige id. Wenn der Server die dann einmal kennt, wird sie ja einfach wiederverwendet, und dann ist auch egal,
+        //          ob die IDs jetzt alle nah beieinander liegen, oder ob die quasi zufaellig sind. ;)
+        // ###
+
+        /* OLD_IMPLEMENTAGION
+
         int id = id_count;
 
         id_count++;
         return id;
+
+         */
+
+        try {
+            byte[] playerHash = java.security.MessageDigest.getInstance("MD5").digest(playerName.getBytes());
+            int newId = DatatypesUtils.BytesToInteger(playerHash);
+            Log.w("CALCID", "New id is: " + newId + ", from name; " + playerName);
+            return newId;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            //throw new NoSuchAlgorithmException("Hashing algorithm wasn't found", e);
+            return -1;
+        }
+
+        /*int calced = Integer.MIN_VALUE;
+        for (int i = 0; i < playerName.length(); i++)
+        {
+            calced += Integer.valueOf( ((byte)playerName.charAt(i)) + 128 ) * (Math.pow(256, i));
+        }
+
+        return calced;*/
     }
     //returns index of a player in list, -1 if player not exists
     public static int getPlayerIndexInList(List<Player> playerList, Player target){

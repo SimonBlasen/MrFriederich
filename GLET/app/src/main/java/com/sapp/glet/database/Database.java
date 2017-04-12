@@ -12,6 +12,7 @@ import com.sapp.glet.database.stats.StatsCsGo;
 import com.sapp.glet.database.stats.StatsParagon;
 import com.sapp.glet.database.stats.StatsProjectCars;
 import com.sapp.glet.database.stats.StatsType;
+import com.sapp.glet.filesystem.Filer;
 import com.sapp.glet.filesystem.FilerDatabase;
 
 import java.io.BufferedReader;
@@ -24,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.Buffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,11 +36,26 @@ public class Database {
 
     private static List<Player> m_players = new ArrayList<Player>();
     private static List<Game> m_games = new ArrayList<Game>();
-    private static final String PLAYERS_CACHE_FILENAME = "players_cache";
+    protected static final String PLAYERS_CACHE_FILENAME = "players_cache";
+    protected static final String PLAYER_ME_ID = "player_own_id";
+
+    /**
+     * In dieser Liste sind alle Dateipfade einzutragen, die mit dem Server synchronisiert werden sollen.
+     * Jedoch nur die Dateien, bei denen immer Zeilenweise Daten hinzugefügt werden, z.B. ein Chatverlauf, oder ein News-Feed oder sowas
+     */
+    private static final List<String> allFiles_Continuous = new ArrayList<String>(Arrays.asList(new String[] {}));
+    /**
+     * In dieser Liste sind alle Dateipfade einzutragen, die mit dem Server synchronisiert werden sollen.
+     * Hier jedoch die Dateien, die immer komplett mit dem Server synchronisiert werden sollen. Es wird also immer die komplette Datei vom Server geholt
+     */
+    private static final List<String> allFiles_CompleteSync = new ArrayList<String>(Arrays.asList(new String[] {PLAYERS_CACHE_FILENAME}));
+
+    private static int m_own_id = -1;
 
     public static void loadDatabase(Context context){
         String[] data = loadPlayersCache(context);
         m_players = playersCacheToPlayerList(data);
+        getOwnId(context);
     }
 
     //Writes the Players List to a file
@@ -128,16 +145,31 @@ public class Database {
         m_players.add(player);
     }
 
-    public static Player getPlayerById(int id){
-        for(int i = 0; i < m_players.size(); i++){
-            if(m_players.get(i).getId() == id){
-                return m_players.get(i);
-            }
-        }
-        return null;
+    public static void setOwnId(Context context, int id)
+    {
+        m_own_id = id;
+
+        Filer.writeFile(context, PLAYER_ME_ID, String.valueOf(m_own_id));
     }
 
+    public static int getOwnId(Context context)
+    {
+        if (m_own_id == -1)
+        {
+            String fileContent = Filer.readFile(context, PLAYER_ME_ID);
+            Log.w("SEND", "FileContent: " + fileContent);
+            if (fileContent != null && fileContent.length() > 0)
+            {
+                m_own_id = Integer.valueOf(fileContent);
+            }
+        }
+        return m_own_id;
+    }
 
+    public static int getOwndId()
+    {
+        return m_own_id;
+    }
 
     /**
      * Returns the current amount of players available in total
@@ -158,6 +190,25 @@ public class Database {
             return m_players.get(index);
         else
             return null;
+    }
+
+    @Nullable
+    public static Player getPlayerById(int id)
+    {
+        for (int i = 0; i < m_players.size(); i++)
+        {
+            if (m_players.get(i).getId() == id)
+            {
+                return m_players.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    public static Player getSelf(Context context)
+    {
+        return getPlayerById(getOwnId(context));
     }
 
 
@@ -237,5 +288,15 @@ public class Database {
             }
         }
         return -1;
+    }
+
+    public static List<String> getAllFiles_Continuous()
+    {
+        return allFiles_Continuous;
+    }
+
+    public static List<String> getAllFiles_CompleteSync()
+    {
+        return allFiles_CompleteSync;
     }
 }

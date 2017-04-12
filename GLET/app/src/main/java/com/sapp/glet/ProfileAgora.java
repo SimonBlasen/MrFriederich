@@ -2,6 +2,7 @@ package com.sapp.glet;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,44 +32,57 @@ public class ProfileAgora extends AppCompatActivity {
 
 
 
-        Player test = Database.getPlayer(0);
+        //Player test = Database.getPlayer(0);
+        Player test = Database.getSelf(theContext);
 
-        StatsParagon test_stats = (StatsParagon) test.getStats(StatsType.PARAGON);
+        if (test != null)
+        {
+            StatsParagon test_stats = (StatsParagon) test.getStats(StatsType.PARAGON);
 
-       String league = test_stats.getLeague();
+            String league = test_stats.getLeague();
 
 
-        switch (league){
-            case StatsParagon.BRONCE:
-                text_player_league.setTextColor(Color.parseColor("#cd7f32"));
-                text_player_score.setTextColor(Color.parseColor("#cd7f32"));
-                score_logo.setImageResource(R.mipmap.ic_bronce);
+            switch (league){
+                case StatsParagon.BRONCE:
+                    text_player_league.setTextColor(Color.parseColor("#cd7f32"));
+                    text_player_score.setTextColor(Color.parseColor("#cd7f32"));
+                    score_logo.setImageResource(R.mipmap.ic_bronce);
 
-                break;
-            case StatsParagon.SILVER:
-                text_player_league.setTextColor(Color.parseColor("#c0c0c0"));
-                text_player_score.setTextColor(Color.parseColor("#c0c0c0"));
-                score_logo.setImageResource(R.mipmap.ic_silver);
-                break;
-            case StatsParagon.GOLD:
-                text_player_league.setTextColor(Color.parseColor("#ffd700"));
-                text_player_score.setTextColor(Color.parseColor("#ffd700"));
-                score_logo.setImageResource(R.mipmap.ic_gold);
-                break;
-            case StatsParagon.PLATIN:
-                text_player_league.setTextColor(Color.parseColor("#478F63"));
-                text_player_score.setTextColor(Color.parseColor("#478F63"));
-                score_logo.setImageResource(R.mipmap.ic_platin);
-                break;
-            case StatsParagon.DIAMOND:
-                text_player_league.setTextColor(Color.parseColor("#0198E1"));
-                text_player_score.setTextColor(Color.parseColor("#0198E1"));
-                score_logo.setImageResource(R.mipmap.ic_diamond);
-                break;
+                    break;
+                case StatsParagon.SILVER:
+                    text_player_league.setTextColor(Color.parseColor("#c0c0c0"));
+                    text_player_score.setTextColor(Color.parseColor("#c0c0c0"));
+                    score_logo.setImageResource(R.mipmap.ic_silver);
+                    break;
+                case StatsParagon.GOLD:
+                    text_player_league.setTextColor(Color.parseColor("#ffd700"));
+                    text_player_score.setTextColor(Color.parseColor("#ffd700"));
+                    score_logo.setImageResource(R.mipmap.ic_gold);
+                    break;
+                case StatsParagon.PLATIN:
+                    text_player_league.setTextColor(Color.parseColor("#478F63"));
+                    text_player_score.setTextColor(Color.parseColor("#478F63"));
+                    score_logo.setImageResource(R.mipmap.ic_platin);
+                    break;
+                case StatsParagon.DIAMOND:
+                    text_player_league.setTextColor(Color.parseColor("#0198E1"));
+                    text_player_score.setTextColor(Color.parseColor("#0198E1"));
+                    score_logo.setImageResource(R.mipmap.ic_diamond);
+                    break;
+            }
+            text_player_name.setText(test.getName());
+            text_player_score.setText("" + ((StatsParagon) test.getStats(StatsType.PARAGON)).getScore());
+            text_player_league.setText(league);
         }
-        text_player_name.setText(test.getName());
-        text_player_score.setText("" + ((StatsParagon) test.getStats(StatsType.PARAGON)).getScore());
-        text_player_league.setText(league);
+        else
+        {
+            text_player_name.setText("Irgendwo im Code gibt's nen Fehler. Hat irgendwas damit zu tun, dass die ID des Spielers, der man selber ist, nicht richtig gespeichert wird, oder der entsprechende Player nicht vorhanden ist oder irgend sowas");
+
+            text_player_score.setText("");
+            text_player_league.setText("");
+
+        }
+
 
 
     }

@@ -25,6 +25,8 @@ import com.sapp.glet.database.games.Paragon;
 import com.sapp.glet.filesystem.FilerDatabase;
 import com.sapp.glet.GameRequests.GameRequest;
 import com.sapp.glet.GameRequests.GameRequestHandler;
+import com.sapp.glet.service.Synchronisator;
+import com.sapp.glet.service.TcpMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -239,7 +241,6 @@ public class FragmentParagon extends Fragment {
                 Player player = Database.getPlayers().get(position);
                 Log.w("bug5", "added Player = " + player.getName());
                 FragmentParagon.invitedPlayers.add(player);
-
             }
 
             @Override
@@ -271,9 +272,14 @@ public class FragmentParagon extends Fragment {
         Log.w("bug7", "GameRequestsLoaded");
 
         debug.setText("");
-        for(int i = 0; i < GameRequestHandler.getGameRequests().size(); i++){
+
+        // TODO
+        // Sapph: Hab ich auskommentiert, weils da abgestuerzt ist. Da aber dieses, von Intelligenzmangel betroffenen Entwicklern programmierte, Android-Studio nicht in der Lage
+        //        ist, einen verdammten Stack-Trace anzuzeigen, weiss ich nicht, wo da der Fehler auftritt
+        //
+        /*for(int i = 0; i < GameRequestHandler.getGameRequests().size(); i++){
             debug.setText(debug.getText() + "\n" + GameRequestHandler.getGameRequests().get(i).getRequestHost().getName());
-        }
+        }*/
         return view;
     }
 

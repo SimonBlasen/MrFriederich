@@ -8,9 +8,12 @@ import com.sapp.glet.database.stats.StatsCsGo;
 import com.sapp.glet.database.stats.StatsParagon;
 import com.sapp.glet.database.stats.StatsProjectCars;
 import com.sapp.glet.database.stats.StatsType;
+import com.sapp.glet.util.DatatypesUtils;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Simon on 04.03.2017.
@@ -127,13 +130,24 @@ public class Player {
 
          */
 
-        int calced = Integer.MIN_VALUE;
+        try {
+            byte[] playerHash = java.security.MessageDigest.getInstance("MD5").digest(playerName.getBytes());
+            int newId = DatatypesUtils.BytesToInteger(playerHash);
+            Log.w("CALCID", "New id is: " + newId + ", from name; " + playerName);
+            return newId;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            //throw new NoSuchAlgorithmException("Hashing algorithm wasn't found", e);
+            return -1;
+        }
+
+        /*int calced = Integer.MIN_VALUE;
         for (int i = 0; i < playerName.length(); i++)
         {
             calced += Integer.valueOf( ((byte)playerName.charAt(i)) + 128 ) * (Math.pow(256, i));
         }
 
-        return calced;
+        return calced;*/
     }
     //returns index of a player in list, -1 if player not exists
     public static int getPlayerIndexInList(List<Player> playerList, Player target){

@@ -151,6 +151,44 @@ namespace MrFriederichServer
                         //TODO save and compare hash
                     }
                 }
+
+                // Active disconnect
+                else if (message[0] == 0 && message[1] == 6)
+                {
+                    user = null;
+                    for (int i = 0; i < users.Count; i++)
+                    {
+                        if (users[i].Ip == ip && users[i].Port == port)
+                        {
+                            user = users[i];
+                            break;
+                        }
+                    }
+
+                    if (user != null)
+                    {
+                        users.Remove(user);
+                    }
+                    else
+                    {
+                        ConsoleWriteline("WARNING: TCP Connection removed itself. But no User instance was found, so none has been removed");
+                    }
+                    ConsoleWriteline("TCP Connection removed itself actively");
+
+                    server.RemoveTCPConnection(ip, port);
+                }
+
+                // Test message
+                else if (message[0] == 0 && message[1] == 7)
+                {
+                    ConsoleWriteline("Test message arrived");
+                }
+
+                // Test message
+                else if (message[0] == 0 && message[1] == 8)
+                {
+                    ConsoleWriteline("Playerid: " + message[2].ToString() + message[3].ToString() + message[4].ToString() + message[5].ToString());
+                }
             }
         }
 
@@ -175,19 +213,11 @@ namespace MrFriederichServer
             if (commands[0] == "help")
             {
                 ConsoleWriteline("Available commands:\n"
-                                + " cancel                     Cancels the starting process\n"
-                                + " createportmaps             Creates the explicit Open.Nat port maps\n"
-                                + " deleteportmaps             Deletes the opened port maps\n"
+                                + " close                      Calls the CloseServer() method on the server\n"
+                                + " gethash                    Hashs the file in filepath and shows the hash\n"
                                 + " kill                       Instantaneously stopps and closes the server without terminating any thready or ports\n"
-                                + " listnatdevices             Lists all open Open.Nat NatDevices\n"
-                                + " listportmaps               Lists all open Open.Nat port maps\n"
-                                + " playerlist                 Returns a list of all player and ids\n"
-                                + " player kick [playerID]     Kicks the given player\n"
-                                + " repair properties          Repairs the server.properties file\n"
-                                + " select [number]            Selects the given NatDevice to use\n"
-                                + " setmap [mapNumber]         Sets the map to the given map number\n"
-                                + " setminplayers [amount]     Sets the amount of players needed, to start a race\n"
-                                + " setstarttime [start time]  Sets the time in seconds to wait for other players\n"
+                                + " listusers                  Lists all User instances currently\n"
+                                + " send [args0] [arg1] ...    Sends all given arguments to all connections\n"
                                 + " stop                       Stops the server properly");
             }
 
@@ -230,6 +260,12 @@ namespace MrFriederichServer
             else if (commands.Length >= 1 && commands[0] == "close")
             {
                 server.CloseServer();
+            }
+
+            else if (commands.Length >= 1 && commands[0] == "stop")
+            {
+                server.CloseServer();
+                Environment.Exit(0);
             }
         }
 

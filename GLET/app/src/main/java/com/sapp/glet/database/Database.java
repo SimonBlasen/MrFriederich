@@ -55,6 +55,7 @@ public class Database {
     public static void loadDatabase(Context context){
         String[] data = loadPlayersCache(context);
         m_players = playersCacheToPlayerList(data);
+        getOwnId(context);
     }
 
     //Writes the Players List to a file
@@ -162,6 +163,11 @@ public class Database {
                 m_own_id = Integer.valueOf(fileContent);
             }
         }
+        return m_own_id;
+    }
+
+    public static int getOwndId()
+    {
         return m_own_id;
     }
 

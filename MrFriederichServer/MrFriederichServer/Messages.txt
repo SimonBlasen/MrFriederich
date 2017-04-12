@@ -6,6 +6,8 @@ TCP Messages
 
 	 Own Name					0			2			[plyrID<<24][plyrID<<16][plyrID<<8]	[plyrID]	[Name in bytes...]
 	 Own file hash				0			4			[plyrID<<24][plyrID<<16][plyrID<<8]	[plyrID]	[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		[hash]		
+	 Disconnect self			0			6			
+	 Testmessage				0			7			[plyrID<<24][plyrID<<16][plyrID<<8]	[plyrID]	0
 
 	Vom Server:
 

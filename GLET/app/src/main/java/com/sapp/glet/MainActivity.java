@@ -46,13 +46,20 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        //StrictMode.setThreadPolicy(policy);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         theContext = this;
 
+
         //Prüfe ob erster Start - wenn ja first_launch, sonst main.
         boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
+        //isFirstTime = true;
+        //Database.getPlayers().clear();
+        //Database.writePlayersCache(this);
+        Database.loadDatabase(this);
+
+        Log.i("SAPPHINF", "Database.playerAmount = " + Database.getPlayersAmount());
         if(isFirstTime){
             Log.w("TEST", "erster Start!");
             Intent intent_firsttime = new Intent(theContext, FirstStart.class);

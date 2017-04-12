@@ -46,6 +46,9 @@ public class FirstStart extends AppCompatActivity {
                 player_me.addStats(paragon);
                 player_me.setIsOnline(true);
                 Database.addPlayer(player_me);
+                Database.writePlayersCache(getApplicationContext());
+
+                Log.i("SAPPHINF", "Database.playerAmount = " + Database.getPlayersAmount());
 
                 //Starte Main Activity
                 Intent launch_main_activity = new Intent(theContext, MainActivity.class);

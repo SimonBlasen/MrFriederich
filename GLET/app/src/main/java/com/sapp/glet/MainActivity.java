@@ -18,7 +18,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -183,27 +186,39 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        final ImageButton c_yes = (ImageButton) findViewById(R.id.c_yes);
-        final ImageButton c_no = (ImageButton) findViewById(R.id.c_no);
+        final CheckBox cB_accept = (CheckBox) findViewById(R.id.cB_accept);
+        final CheckBox cB_decline = (CheckBox) findViewById(R.id.cB_decline);
+        final Animation animationFadeAccept = AnimationUtils.loadAnimation(this, R.anim.fade_transition);
+        final Animation animationFadeDecline = AnimationUtils.loadAnimation(this, R.anim.fade_transition);
 
-        c_yes.setOnClickListener(new View.OnClickListener() {
+        cB_accept.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                c_yes.setBackgroundResource(R.mipmap.ic_yes_checked);
-                c_no.setBackgroundResource(R.mipmap.ic_no_unchecked);
+            public void  onClick(View v){
+                if(cB_decline.isChecked()){
+                    cB_accept.startAnimation(animationFadeAccept);
+                    cB_decline.setChecked(false);
+                    cB_decline.startAnimation(animationFadeDecline);
+                }else{
+                    cB_accept.startAnimation(animationFadeAccept);
+                }
+
+            }
+        });
+        cB_decline.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void  onClick(View v){
+                if(cB_accept.isChecked()){
+                    cB_decline.startAnimation(animationFadeDecline);
+                    cB_accept.setChecked(false);
+                    cB_accept.startAnimation(animationFadeAccept);
+                }else{
+                    cB_decline.startAnimation(animationFadeDecline);
+                }
 
             }
         });
 
 
-        c_no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                c_yes.setBackgroundResource(R.mipmap.ic_yes_unchecked);
-                c_no.setBackgroundResource(R.mipmap.ic_no_checked);
-
-            }
-        });
 
 
         intentService = new Intent(this, HelloService.class);

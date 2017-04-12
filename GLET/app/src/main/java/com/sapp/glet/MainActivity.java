@@ -36,7 +36,6 @@ import android.widget.Toast;
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
 import com.sapp.glet.database.Database;
-import com.sapp.glet.database.DatabaseManager;
 import com.sapp.glet.database.Player;
 import com.sapp.glet.filesystem.Filer;
 import com.sapp.glet.service.HelloService;
@@ -227,8 +226,8 @@ public class MainActivity extends AppCompatActivity
                 }
 
             }
-        });*/
         });
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener(){

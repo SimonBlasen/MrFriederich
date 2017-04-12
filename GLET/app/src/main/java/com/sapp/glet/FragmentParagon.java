@@ -277,9 +277,9 @@ public class FragmentParagon extends Fragment {
         // Sapph: Hab ich auskommentiert, weils da abgestuerzt ist. Da aber dieses, von Intelligenzmangel betroffenen Entwicklern programmierte, Android-Studio nicht in der Lage
         //        ist, einen verdammten Stack-Trace anzuzeigen, weiss ich nicht, wo da der Fehler auftritt
         //
-        /*for(int i = 0; i < GameRequestHandler.getGameRequests().size(); i++){
+        for(int i = 0; i < GameRequestHandler.getGameRequests().size(); i++){
             debug.setText(debug.getText() + "\n" + GameRequestHandler.getGameRequests().get(i).getRequestHost().getName());
-        }*/
+        }
         return view;
     }
 

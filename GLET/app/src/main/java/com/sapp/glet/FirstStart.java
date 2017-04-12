@@ -48,8 +48,6 @@ public class FirstStart extends AppCompatActivity {
                 Database.addPlayer(player_me);
                 Database.writePlayersCache(getApplicationContext());
 
-                Log.i("SAPPHINF", "Database.playerAmount = " + Database.getPlayersAmount());
-
                 //Starte Main Activity
                 Intent launch_main_activity = new Intent(theContext, MainActivity.class);
                 theContext.startActivity(launch_main_activity);

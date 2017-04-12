@@ -158,6 +158,15 @@ public class Player {
         }
         return -1;
     }
+    //returns index of a player in list, -1 if player not exists
+    public static int getPlayerIndexInList(List<Player> playerList, Player target){
+        for(int i = 0; i< playerList.size(); i++){
+            if (playerList.get(i).getId() == target.getId()){
+                return i;
+            }
+        }
+        return -1;
+    }
 
 
     @Override

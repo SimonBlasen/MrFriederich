@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,21 +22,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ExpandableListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sapp.glet.connection.Client;
 import com.sapp.glet.connection.MessageListener;
 import com.sapp.glet.database.Database;
+import com.sapp.glet.database.DatabaseManager;
 import com.sapp.glet.database.Player;
 import com.sapp.glet.filesystem.Filer;
 import com.sapp.glet.service.HelloService;
+import com.sapp.glet.service.MessengerService;
+import com.sapp.glet.service.PullService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.w3c.dom.Text;
+
+import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -51,15 +66,8 @@ public class MainActivity extends AppCompatActivity
 
         theContext = this;
 
-
         //Prüfe ob erster Start - wenn ja first_launch, sonst main.
         boolean isFirstTime = LaunchControl.isFirst(MainActivity.this);
-        //isFirstTime = true;
-        //Database.getPlayers().clear();
-        //Database.writePlayersCache(this);
-        Database.loadDatabase(this);
-
-        Log.i("SAPPHINF", "Database.playerAmount = " + Database.getPlayersAmount());
         if(isFirstTime){
             Log.w("TEST", "erster Start!");
             Intent intent_firsttime = new Intent(theContext, FirstStart.class);
@@ -190,116 +198,50 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        final ImageButton c_yes = (ImageButton) findViewById(R.id.c_yes);
-        final ImageButton c_no = (ImageButton) findViewById(R.id.c_no);
+        final CheckBox cB_accept = (CheckBox) findViewById(R.id.cB_accept);
+        final CheckBox cB_decline = (CheckBox) findViewById(R.id.cB_decline);
+        final Animation animationFadeAccept = AnimationUtils.loadAnimation(this, R.anim.fade_transition);
+        final Animation animationFadeDecline = AnimationUtils.loadAnimation(this, R.anim.fade_transition);
+        cB_accept.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void  onClick(View v){
+                if(cB_decline.isChecked()){
+                    cB_accept.startAnimation(animationFadeAccept);
+                    cB_decline.setChecked(false);
+                    cB_decline.startAnimation(animationFadeDecline);
+                }else{
+                    cB_accept.startAnimation(animationFadeAccept);
+                }
 
+            }
+        });
+        cB_decline.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void  onClick(View v){
+                if(cB_accept.isChecked()){
+                    cB_decline.startAnimation(animationFadeDecline);
+                    cB_accept.setChecked(false);
+                    cB_accept.startAnimation(animationFadeAccept);
+                }else{
+                    cB_decline.startAnimation(animationFadeDecline);
+                }
 
-        // Auskommentiert von Sapphire, weil ich id.button_start_game nicht existent zu sein scheint ;)
+            }
+        });*/
+        });
 
-        /*Button b_game = (Button) findViewById(R.id.button_start_game);
-        b_game.setOnClickListener(new View.OnClickListener(){
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent launch_profile = new Intent(theContext, StartGame.class);
-                theContext.startActivity(launch_profile);
-            }
-        });*/
-
-        /*Button b_profile = (Button) findViewById(R.id.button_profile);
-        b_profile.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent launch_profile = new Intent(theContext, ProfileAgora.class);
-                theContext.startActivity(launch_profile);
-            }
-        });*/
-
-
-        //Debug
-        Log.w("TEST", "Versuche database zu erstellen");
-        Database.loadDatabase(theContext);
-        for(int i = 0; i < Database.getPlayers().size(); i ++){
-            Player player = Database.getPlayers().get(i);
-            Log.w("NICE", "V1 SPielername = " + player.getName());
-            Log.w("NICE", "V1 Spielerid = " + player.getId());
-
-        }
-
-
-        c_yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                c_yes.setBackgroundResource(R.mipmap.ic_yes_checked);
-                c_no.setBackgroundResource(R.mipmap.ic_no_unchecked);
-
+                Intent intent = new Intent(theContext, StartGame.class);
+                theContext.startActivity(intent);
             }
         });
-
-
-        c_no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                c_yes.setBackgroundResource(R.mipmap.ic_yes_unchecked);
-                c_no.setBackgroundResource(R.mipmap.ic_no_checked);
-
-            }
-        });
-        
-        
-
-        // Auskommentiert von Sapphire, weil ich id.b_data nicht existent zu sein scheint
-
-        /*Button b_data = (Button) findViewById(R.id.b_data);
-        b_data.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.w("OLAF", "DataGenerieren gedrückt");
-                for(int j = 0; j < 10; j++){
-                    Player autoplayer = new Player("AutoPlayer"+j);
-                    Database.addPlayer(autoplayer);
-
-                }
-                Log.w("OLAF", "Database File Erstellt");
-                Database.writePlayersCache(theContext);
-            }
-        });
-
-
-        Button b_load = (Button) findViewById(R.id.b_load);
-        b_load.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Database.loadDatabase(theContext);
-                Log.w("OLAF", "Database File geladen");
-
-
-                TextView debug = (TextView) findViewById(R.id.textView3);
-
-                for(int i = 0; i < Database.getPlayers().size(); i ++){
-                    Player player = Database.getPlayers().get(i);
-                    Log.w("NICE", "SPielername = " + player.getName());
-                    Log.w("NICE", "Spielerid = " + player.getId());
-                    debug.setText(debug.getText() + "\n" + player.getName());
-                }
-                Log.w("OLAF", "widget aktualisiert");
-
-            }
-        });*/
 
 
         intentService = new Intent(this, HelloService.class);
 
-
-
-        //getApplication().startService(new Intent(getApplication(), PullService.class));
-        /*client = new Client("m.m-core.eu", 24400);
-        client.addListener(this);
-
-        try {
-            client.Connect();
-        } catch (IOException e) {
-            Toast.makeText(this, "Failed to connect", Toast.LENGTH_LONG);
-        }*/
     }
 
 
@@ -335,24 +277,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /*@SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_start_game) {
-            Intent intent = new Intent(theContext, StartGame.class);
-            theContext.startActivity(intent);
-        } else if (id == R.id.nav_status) {
-
-        } else if (id == R.id.nav_agora){
-
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }*/
 
     @Override
     public void recieveMessage(String message, byte[] bytes) {

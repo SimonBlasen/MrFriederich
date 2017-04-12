@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="85dp"
+    android:background="@drawable/request_item_shadow"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.sapp.glet.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+
+    <CheckBox
+        android:id="@+id/cB_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/cB_decline"
+        android:layout_alignBottom="@+id/cB_decline"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:button="@drawable/checkbox_checked" />
+
+    <CheckBox
+        android:id="@+id/cB_decline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:button="@drawable/checkbox_crossed"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/cB_accept"
+        android:layout_toEndOf="@+id/cB_accept" />
+
+    <TextView
+        android:id="@+id/tV_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/cB_decline"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="-10dp"
+        android:layout_toEndOf="@+id/cB_decline"
+        android:layout_toRightOf="@+id/cB_decline"
+        android:text="18:50"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tV_Game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tV_time"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
+        android:layout_toEndOf="@+id/tV_time"
+        android:layout_toRightOf="@+id/tV_time"
+        android:text="GameName" />
+
+    <TextView
+        android:id="@+id/tV_requester"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tV_Game"
+        android:layout_alignBottom="@+id/tV_Game"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:layout_toEndOf="@+id/tV_party"
+        android:layout_toRightOf="@+id/tV_party"
+        android:text="AnfrageSteller" />
+
+    <TextView
+        android:id="@+id/tV_party"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tV_time"
+        android:layout_alignLeft="@+id/tV_Game"
+        android:layout_alignStart="@+id/tV_Game"
+        android:text="Eingeladene" />
+
+</RelativeLayout>
